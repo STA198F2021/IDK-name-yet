@@ -21,10 +21,22 @@ library(readxl)
 library(dplyr)
 ```
 
+```{r install spatial data packages}
+library(sf)
+library(rgeos)
+library(scales)
+library(maps)
+theme_set(theme_bw())
+```
+
 # Load Data
 
 ```{r load-data}
 Carolina_Small_Business_Dataset <- read_excel("~/Carolina Small Business: Stats 198 Project/data/Carolina Small Business Dataset.xlsx")
+```
+
+```{r spatial map}
+map('county','north carolina')
 ```
 
 # Introduction and Data, including Research Questions
