@@ -8,20 +8,18 @@ editor_options:
   chunk_output_type: console
 ---
 
-# Load Packages
-
 ```{r setup, include=FALSE, echo= FALSE, message= FALSE, warning= FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r load data packages, warning= FALSE, message= FALSE}
+```{r load-data-packages, echo= FALSE, warning= FALSE, message= FALSE}
 library(readr)
 library(tidyverse)
 library(readxl)
 library(dplyr)
 ```
 
-```{r install spatial data packages}
+```{r install-spatial-data-packages, echo= FALSE, warning= FALSE, message= FALSE}
 library(sf)
 library(rgeos)
 library(scales)
@@ -31,12 +29,8 @@ theme_set(theme_bw())
 
 # Load Data
 
-```{r load-data}
+```{r load-data, warning= FALSE, message= FALSE}
 Carolina_Small_Business_Dataset <- read_excel("~/Carolina Small Business: Stats 198 Project/data/Carolina Small Business Dataset.xlsx")
-```
-
-```{r spatial map}
-map('county','north carolina')
 ```
 
 ```{r spatial map data frame}
@@ -45,9 +39,7 @@ north_carolina_map <- map_data('county', 'north carolina')
 
 # Introduction and Data, including Research Questions
 
-(The introduction should introduce your general research question and your data (where it came from, how it was collected, what are the cases, what are the variables, etc.). Your research questions should be clearly specified. The motivation for your research question should be clear, with citations to relevant literature as appropriate.)
-
-Research Questions:
+## Research Questions:
 
 1) Is more money lent to minority and women owned businesses? Is the difference in lending money significant based on whether a business is minority and/or women owned?
 
@@ -57,15 +49,64 @@ Research Questions:
 
 # Glimpse
 
-Here is a glimpse of our dataset:
+## Carolina Small Business Dataset:
 
-```{r glimpse dataset}
+```{r glimpse-dataset, warning= FALSE, message= FALSE}
 glimpse(Carolina_Small_Business_Dataset)
+```
+
+## Map of North Carolina Counties
+
+```{r nc-dataset, warning= FALSE, message= FALSE}
+glimpse(north_carolina_map)
 ```
 
 # Data Analysis Plan
 
-(Specify the outcome (response, Y) and predictor (explanatory, X) variables you will use to answer your question, as well as the comparison groups you will use, if applicable. You may include very preliminary exploratory data analysis, including some summary statistics and visualizations, along with some explanation on how they help you learn more about your data. Note the statistical method(s) that you believe will be useful in answering your question(s). 
-What results from these specific statistical methods are needed to support your hypothesized answer?)
+For the three research questions, the explanatory and response variables are as follows:
+
+1) Explanatory Variable: Whether business is minority and/or women owned. Response Variable: Money lent to the business
+
+2) Explanatory Variable: Whether business is minority and/or women owned. Response variable: Social, Community Trust, and Financial Stability Scores
+
+3) Explanatory Variable: Whether business is minority and/or women owned. Response Variable: Employment Outcomes
+
+The data analysis methodology is as follows:
+
+## Step 1: Contextualize and Situate the Data
+
+The dataset will be contextualized with a description of the metadata and the report that published the dataset, including an explanation of the variables. Additionally, visualizations will be made for the following:
+
+a) To preview the overall difference between minority and/or women owned and not minority and/or women owned businesses, a bar plot will be made comparing the total amount of money lent to minority owned business, women owned business, both minority and women owned businesses, and not minority or women owned businesses. Similar geom_bar plots will be made based on the social, community trust, financial stability scores and based on employment outcome response variables. 
+
+b) To preview the spread of data and overall difference between minority and/or women owned and not minority and/or women owned businesses, a box plot will be made comparing the total amount of money lent to minority owned business, women owned business, both minority and women owned businesses, and not minority or women owned businesses. Similar geom_bar plots will be made based on the social, community trust, financial stability scores and based on employment outcome response variables.
+
+c) A histogram with the distribution of the amount of money lent, with a fill variable for women, minority, women+minority, and not women or minority businesses. Similar histograms will be made for the distribution of scores and employment outcomes. 
+
+d) A density map of North Carolina counties based on the amount of lending projects in each county.
+
+e) A table, grouped by county, with the fraction of women owned/total businesses in country, minority owned/total businesses in county, women+minority/total businesses in county, and not women or minority/ total businesses in county.
+
+## Step 2: Conduct Statistical Tests
+
+The primary form of testing for each research question will be a paired two-sided hypothesis t test. For each test, the null hypothesis is that there is no difference in the response variable (money lent, scores, or employment outcomes) based on the explanatory variable (women, minority, women+minority, or neither women/minority business), and the alternative hypothesis is that there is a difference in the response variable (money lent, scores, or employment outcomes) based on the explanatory variable (women, minority, women+minority, or neither women/minority business). For the t-tests, this is how we would like to compare the explanatory variables:
+
+a) women vs. not women businesses
+b) minority vs not minority business
+c) women+minority vs. everything else
+d) neither women or minority vs. everything else
+
+
+## Step 3: Display Results of Statistical Tests
+
+The results of the paired two-sided hypothesis t-tests will be displayed by creating table p-values, confidence intervals, and t-values for each t-test. We cannot create a graph for the distribution of the difference between the explanatory variables compared because the t-test is not comparing two points in time.    
+
+## Step 4: Draw Conclusions
+
+If the p value for a given test is above 0.05 and the null hypothesis mean (difference = 0) is within the confidence interval, the null hypothesis cannot be rejected. 
+
+If the p value for a given test is below 0.05 and the null hypothesis mean (difference = 0) is not within the confidence interval, the null hypothesis can be rejected. More testing must be done before any conclusion can be made about the alternative hypothesis, but some inferences and predictions could be made based on the context of the data. 
 
 # References
+
+https://www.carolinasmallbusiness.org/post/small-business-covid-19-lending-programs-fostering-social-capital-and-financial-stability
