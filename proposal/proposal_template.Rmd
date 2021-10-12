@@ -29,15 +29,15 @@ theme_set(theme_bw())
 
 # Load Data
 
-```{r load-data, warning= FALSE, message= FALSE}
-Carolina_Small_Business_Dataset <- read_excel("~/Carolina Small Business: Stats 198 Project/data/Carolina Small Business Dataset.xlsx")
-```
-
 ```{r spatial map data frame}
 north_carolina_map <- map_data('county', 'north carolina')
 ```
 
 # Introduction and Data, including Research Questions
+
+## Motivation for research: 
+
+Recently, we’ve seen more and more posts of small businesses on social media platforms. Walking on the streets of Durham, I’ve noticed that the area around ninth street is filled with businesses run by BiPOC and marginalized folks. According to data from the NC Secretary of State's Office, the number of small businesses in North Carolina boomed during 2021, increasing by 50% compared to 2020. I wanted to understand more about the socioeconomic and locational distributions of small businesses in North Carolina, and the support they are receiving to stay open during COVID, where there’s even more competition due to the increasing amount of new small businesses. 
 
 ## Research Questions:
 
@@ -51,9 +51,6 @@ north_carolina_map <- map_data('county', 'north carolina')
 
 ## Carolina Small Business Dataset:
 
-```{r glimpse-dataset, warning= FALSE, message= FALSE}
-glimpse(Carolina_Small_Business_Dataset)
-```
 
 ## Map of North Carolina Counties
 
