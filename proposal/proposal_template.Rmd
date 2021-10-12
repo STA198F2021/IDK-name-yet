@@ -29,6 +29,10 @@ theme_set(theme_bw())
 
 # Load Data
 
+```{r load-data, warning= FALSE, message= FALSE}
+Carolina_Small_Business_Dataset <- read_excel("~/Carolina Small Business: Stats 198 Project/data/Carolina Small Business Dataset.xlsx")
+```
+
 ```{r spatial map data frame}
 north_carolina_map <- map_data('county', 'north carolina')
 ```
@@ -37,7 +41,7 @@ north_carolina_map <- map_data('county', 'north carolina')
 
 ## Motivation for research: 
 
-Recently, we’ve seen more and more posts of small businesses on social media platforms. Walking on the streets of Durham, I’ve noticed that the area around ninth street is filled with businesses run by BiPOC and marginalized folks. According to data from the NC Secretary of State's Office, the number of small businesses in North Carolina boomed during 2021, increasing by 50% compared to 2020. I wanted to understand more about the socioeconomic and locational distributions of small businesses in North Carolina, and the support they are receiving to stay open during COVID, where there’s even more competition due to the increasing amount of new small businesses. 
+Recently, we’ve seen more and more posts of small businesses on social media platforms. Walking on the streets of Durham, I’ve noticed that the area around ninth street is filled with businesses run by BiPOC and marginalized folks. According to data from the NC Secretary of State's Office, the number of small businesses in North Carolina boomed during 2021, increasing by 50% compared to 2020. We wanted to understand more about the socioeconomic and locational distributions of small businesses in North Carolina, and the support they are receiving to stay open during COVID, where there’s even more competition due to the increasing amount of new small businesses. For this project, we will be studying a dataset from the Carolina Small Business Development Fund (see references).
 
 ## Research Questions:
 
@@ -51,6 +55,9 @@ Recently, we’ve seen more and more posts of small businesses on social media p
 
 ## Carolina Small Business Dataset:
 
+```{r glimpse-dataset, warning= FALSE, message= FALSE}
+glimpse(Carolina_Small_Business_Dataset)
+```
 
 ## Map of North Carolina Counties
 
@@ -92,7 +99,6 @@ a) women vs. not women businesses
 b) minority vs not minority business
 c) women+minority vs. everything else
 d) neither women or minority vs. everything else
-
 
 ## Step 3: Display Results of Statistical Tests
 
