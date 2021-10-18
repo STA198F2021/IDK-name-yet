@@ -9,8 +9,7 @@ editor_options:
 ---
 
 ```{r setup, include=FALSE, echo= FALSE, message= FALSE, warning= FALSE}
-knitr::opts_chunk$set(echo= TRUE, cache = TRUE, warning = FALSE, 
-                      message = FALSE, cache.lazy = FALSE)
+knitr::opts_chunk$set(echo= TRUE, fig.width = 5,fig.height = 3) 
 ```
 
 ```{r load-data-packages, echo= FALSE, warning= FALSE, message= FALSE}
@@ -29,9 +28,7 @@ X500_cities_heart_diseases <- read_excel("~/ Stats 198 Project/data/500_cities_h
 X500_cities_mental_health <- read_excel("~/ Stats 198 Project/data/500_cities_mental_health.xlsx")
 ```
 
-# Wrangling Data
-
-```{r rename-select-filter-data, warning= FALSE, message= FALSE}
+```{r rename-select-filter-data, echo= FALSE, warning= FALSE, message= FALSE}
 Insurance_CDC_Cities <- X500_cities_health_insurance %>%
   rename(percent_lack_insurance = Data_Value) %>%
   filter(StateDesc %in% c("North Carolin", "South Carolin", "California", "Alabama", "New York", "Ohio")) %>%
@@ -55,41 +52,90 @@ Heart_Disease_CDC_Cities <- X500_cities_heart_diseases %>%
 ```
 
 
-```{r join-data, message= FALSE, warning= FALSE}
+```{r join-data, echo= FALSE, message= FALSE, warning= FALSE}
 left_join_1 <- Mental_Health_CDC_Cities %>%
   left_join(Insurance_CDC_Cities)
 ```
 
-```{r join-data-2, message= FALSE, warning= FALSE}
+```{r join-data-2, echo= FALSE, message= FALSE, warning= FALSE}
 left_join_2 <- left_join_1 %>%
   left_join(Diabetes_CDC_Cities)
 ```
 
-```{r join-data-3, message= FALSE, warning= FALSE}
+```{r join-data-3, echo= FALSE, message= FALSE, warning= FALSE}
 final_CDC_data <- left_join_2 %>%
   left_join(Heart_Disease_CDC_Cities)
 ```
 
 # Introduction and Data, including Research Questions
 
-## Motivation for research: 
+America, unlike other developed countries, does not have a universal healthcare program, meaning that not all individuals are granted free health insurance by the government. In America, Health insurance is purchased in the private marketplace or provided by the government only to certain groups, such as pregnant, low income, elderly, families with children. Having lived in Canada, where all citizens can apply for a public health insurance for free which grants them access to quality healthcare, I’ve never had to think of what it would be like without access to healthcare. In doing this research, I wanted to understand the effects of a lack of health insurance in the US, by finding the correlation between not having health insurance and the likelihood of contracting different diseases in 500 largest US cities.
 
-## Research Questions:
+## Research Question:
+
+Do cities with higher percentages of uninsured people have poorer mental health outcomes, higher rates of diabetes, and higher rates of heart disease?
 
 # Glimpse
 
+We randomly selected 50 cities from the original CDC dataset as our sample.
+
+```{r glimpse-dataset, warning= FALSE, message= FALSE}
+glimpse(final_CDC_data)
+```
+
 # Data Analysis Plan
 
-For the research questions, the explanatory and response variables are as follows:
+## Explanatory and Response Variables
 
-The data analysis methodology is as follows:
+Explanatory Variable: percentage of uninsured people in each city
 
-## Step 1: Contextualize and Situate the Data
+Response Variable: percentage of people in each city who reported poor mental health for more than two weeks in 2017, percentage of people in each city diagnosed with diabetes, percentage of people in each city with coronary heart disease
 
-## Step 2: Conduct Statistical Tests
+## Initial Visualizations
 
-## Step 3: Display Results of Statistical Tests
+```{r insurance-mentalhealth, echo= FALSE, warning= FALSE, message= FALSE}
+final_CDC_data %>%
+ggplot(mapping = aes(x = percent_lack_insurance, y = percent_mental_health)) +
+  geom_point() +
+  labs(
+    title = "Lack of Health Insurance and Mental Health Outcomes",
+    subtitle = "Population % from 50 cities in 2017 CDC '500 Cities' Data",
+    x = "Lack of Insurance (%)",
+    y =  "Reporting 2+ Weeks Poor Mental Health
+in 2017 (%)"
+  )
+```
 
-## Step 4: Draw Conclusions
+```{r insurance-diabetes, echo= FALSE, warning= FALSE, message= FALSE}
+final_CDC_data %>%
+ggplot(mapping = aes(x = percent_lack_insurance, y = percent_diabetes)) +
+  geom_point() +
+  labs(
+    title = "Lack of Health Insurance and Diabetes Prevalence",
+    subtitle = "Population % from 50 cities in 2017 CDC '500 Cities' Data",
+    x = "City Pop without Insurance (%)",
+    y = "Population with Diabetes (%)"
+  )
+```
+
+```{r insurance-heartdisease, echo= FALSE, warning= FALSE, message= FALSE}
+final_CDC_data %>%
+ggplot(mapping = aes(x = percent_lack_insurance, y = percent_heart_disease)) +
+  geom_point() +
+  labs(
+    title = "Lack of Health Insurance and Heart Disease Prevalence",
+    subtitle = "Population % from 50 cities in 2017 CDC '500 Cities' Data",
+    x = "Lack of Insurance (%)",
+    y = "Population with Heart Disease (%)"
+  )
+```
+
+Based on the visuals above, the strongest correlation seems to be between Lack of Health Insurance and Mental Health Outcomes. All three graphs depict positive correlations. There is large spread and variation in the data for all visuals.
+
+## Statistical Tests
+
+We will first run three t-tests to determine if there is any significance in the relationship between the percentage of uninsured people and prevalence of poor mental health outcomes, diabetes, and heart disease (respectively). We will then run three regression models to further understand the association between the explanatory variable and each response variable. Through the regression model, we hope to quantify the relationship between the percentage of uninsured people and prevalence of poor mental health outcomes, diabetes, and heart disease. We will also determine the significance of the regression by understanding the t-statistics of the coefficients in each regression.
 
 # References
+
+https://chronicdata.cdc.gov/500-Cities-Places/500-Cities-Local-Data-for-Better-Health-2019-relea/6vp6-wxuq
