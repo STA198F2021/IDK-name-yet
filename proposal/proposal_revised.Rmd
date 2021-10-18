@@ -1,0 +1,55 @@
+---
+title: "Project Proposal Revised"
+subtitle: "due October 20, 2021 by 11:59 PM "
+author: "Isabelle Xiong and Maya Ghanem"
+date: "10/17/2021"
+output: pdf_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE, echo= FALSE, message= FALSE, warning= FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+install.packages('tidyverse')
+```
+
+```{r load-data-packages, echo= FALSE, warning= FALSE, message= FALSE}
+library(readr)
+library(tidyverse)
+library(readxl)
+library(dplyr)
+```
+
+```{r install-spatial-data-packages, echo= FALSE, warning= FALSE, message= FALSE}
+library(sf)
+library(rgeos)
+library(scales)
+library(maps)
+theme_set(theme_bw())
+```
+
+# Load Data
+
+# Introduction and Data, including Research Questions
+
+## Motivation for research: 
+
+## Research Questions:
+
+# Glimpse
+
+# Data Analysis Plan
+
+For the research questions, the explanatory and response variables are as follows:
+
+The data analysis methodology is as follows:
+
+## Step 1: Contextualize and Situate the Data
+
+## Step 2: Conduct Statistical Tests
+
+## Step 3: Display Results of Statistical Tests
+
+## Step 4: Draw Conclusions
+
+# References
