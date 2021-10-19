@@ -22,10 +22,10 @@ library(dplyr)
 # Load Data
 
 ```{r load-data, warning= FALSE, message= FALSE}
-X500_cities_diabetes <- read_excel("~/ Stats 198 Project/data/500_Cities_diabetes.xlsx")
-X500_cities_health_insurance <- read_excel("~/ Stats 198 Project/data/500_cities_health_insurance.xlsx")
-X500_cities_heart_diseases <- read_excel("~/ Stats 198 Project/data/500_cities_heart_diseases.xlsx")
-X500_cities_mental_health <- read_excel("~/ Stats 198 Project/data/500_cities_mental_health.xlsx")
+X500_cities_diabetes <- read_excel("~/R/Project/data/500_Cities_diabetes.xlsx")
+X500_cities_health_insurance <- read_excel("~/R/Project/data/500_cities_health_insurance.xlsx")
+X500_cities_heart_diseases <- read_excel("~/R/Project/data/500_cities_heart_diseases.xlsx")
+X500_cities_mental_health <- read_excel("~/R/Project/data/500_cities_mental_health.xlsx")
 ```
 
 ```{r rename-select-filter-data, echo= FALSE, warning= FALSE, message= FALSE}
@@ -69,6 +69,8 @@ final_CDC_data <- left_join_2 %>%
 
 # Introduction and Data, including Research Questions
 
+The 500 cities dataset is provided by the Center for Disease Control and Prevention (CDC), Division of Population Health, Epidemiology and Surveillance Branch. Data from this dataset is sourced from 28,000 census tracts in “Census Bureau 2010 census population data, Behavioral Risk Factor Surveillance System (BRFSS) data (2017, 2016), and American Community Survey (ACS) 2013-2017, 2012-2016 estimates”. All data was collected through the form of surveys. The metadataset features data for a total of 5 “unhealthy behaviors”, 13 “health outcomes'' and 9 “preventive services” related to 27 types of chronic disease in 500 largest cities in the US. Within the datasets for diabetes, coronary heart disease, mental health outcomes and health insurance, variables include city, state, state abbreviation, year, datasource, TractFIPS, CityFIPS, Geographic Level, data value, low confidence unit, high confidence unit, coordinate of geographical location of city. 
+
 America, unlike other developed countries, does not have a universal healthcare program, meaning that not all individuals are granted free health insurance by the government. In America, Health insurance is purchased in the private marketplace or provided by the government only to certain groups, such as pregnant, low income, elderly, families with children. Having lived in Canada, where all citizens can apply for a public health insurance for free which grants them access to quality healthcare, I’ve never had to think of what it would be like without access to healthcare. In doing this research, I wanted to understand the effects of a lack of health insurance in the US, by finding the correlation between not having health insurance and the likelihood of contracting different diseases in 500 largest US cities.
 
 ## Research Question:
@@ -77,7 +79,7 @@ Do cities with higher percentages of uninsured people have poorer mental health 
 
 # Glimpse
 
-We randomly selected 50 cities from the original CDC dataset as our sample.
+We selected 50 cities from the original CDC dataset as our sample.
 
 ```{r glimpse-dataset, warning= FALSE, message= FALSE}
 glimpse(final_CDC_data)
