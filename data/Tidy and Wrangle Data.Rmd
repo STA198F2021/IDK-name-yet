@@ -10,18 +10,18 @@ editor_options:
 
 # Set Up
 
-```{r setup, include=FALSE, echo= FALSE, message= FALSE, warning= FALSE}
+```{r setup, include=FALSE, message= FALSE, warning= FALSE}
 knitr::opts_chunk$set(echo= TRUE) 
 ```
 
-```{r load-data-packages, echo= FALSE, warning= FALSE, message= FALSE}
+```{r load-data-packages, warning= FALSE, message= FALSE}
 library(readr)
 library(tidyverse)
 library(readxl)
 library(dplyr)
 ```
 
-# Upload Data
+# Load Data
 
 ```{r upload-insurance-data, message= FALSE, warning= FALSE}
 insurance <- read_excel("~/ Stats 198 Project/data/insurance_500_cities.xlsx")
@@ -61,4 +61,123 @@ kidney_disease <- read_excel("~/ Stats 198 Project/data/kidney_disease.xlsx")
 
 # Select, Filter, Summarize, and Rename Data
 
+```{r edit-insurance-data, message= FALSE, warning= FALSE}
+edit_insurance <- insurance %>%
+  select(StateAbbr, StateDesc, CityName, Data_Value_Type, Data_Value, GeoLocation) %>%
+  filter(Data_Value_Type %in% c("Age-adjusted prevalence")) %>%
+  group_by(CityName) %>%
+  mutate(mean_value = mean(Data_Value)) %>%
+  select(StateAbbr, StateDesc, CityName, mean_value, GeoLocation) %>%
+  distinct(CityName, .keep_all = TRUE) %>%
+  rename("insurance" = mean_value)
+```
+
+```{r edit-visits-to-doctor-data, message= FALSE, warning= FALSE}
+edit_visits_to_doctor <- visits_to_doctor %>%
+  select(StateAbbr, StateDesc, CityName, Data_Value_Type, Data_Value, GeoLocation) %>%
+  filter(Data_Value_Type %in% c("Age-adjusted prevalence")) %>%
+  group_by(CityName) %>%
+  mutate(mean_value = mean(Data_Value)) %>%
+  select(StateAbbr, StateDesc, CityName, mean_value, GeoLocation) %>%
+  distinct(CityName, .keep_all = TRUE) %>%
+  rename("visits_to_doctor" = mean_value)
+```
+
+```{r edit-medicine-high-bp-data, message= FALSE, warning= FALSE}
+edit_medicine_high_bp <- medicine_high_bp %>%
+  select(StateAbbr, StateDesc, CityName, Data_Value_Type, Data_Value, GeoLocation) %>%
+  filter(Data_Value_Type %in% c("Age-adjusted prevalence")) %>%
+  group_by(CityName) %>%
+  mutate(mean_value = mean(Data_Value)) %>%
+  select(StateAbbr, StateDesc, CityName, mean_value, GeoLocation) %>%
+  distinct(CityName, .keep_all = TRUE) %>%
+  rename("medicine_high_bp" = mean_value)
+```
+
+```{r edit-smoking-data, message= FALSE, warning= FALSE}
+edit_smoking <- smoking %>%
+  select(StateAbbr, StateDesc, CityName, Data_Value_Type, Data_Value, GeoLocation) %>%
+  filter(Data_Value_Type %in% c("Age-adjusted prevalence")) %>%
+  group_by(CityName) %>%
+  mutate(mean_value = mean(Data_Value)) %>%
+  select(StateAbbr, StateDesc, CityName, mean_value, GeoLocation) %>%
+  distinct(CityName, .keep_all = TRUE) %>%
+  rename("smoking" = mean_value)
+```
+
+```{r edit-binge-drinking-data, message= FALSE, warning= FALSE}
+edit_binge_drinking <- binge_drinking %>%
+  select(StateAbbr, StateDesc, CityName, Data_Value_Type, Data_Value, GeoLocation) %>%
+  filter(Data_Value_Type %in% c("Age-adjusted prevalence")) %>%
+  group_by(CityName) %>%
+  mutate(mean_value = mean(Data_Value)) %>%
+  select(StateAbbr, StateDesc, CityName, mean_value, GeoLocation) %>%
+  distinct(CityName, .keep_all = TRUE) %>%
+  rename("binge_drinking" = mean_value)
+```
+
+```{r edit-physical-activity, message= FALSE, warning= FALSE}
+edit_physical_activity <- physical_activity %>%
+  select(StateAbbr, StateDesc, CityName, Data_Value_Type, Data_Value, GeoLocation) %>%
+  filter(Data_Value_Type %in% c("Age-adjusted prevalence")) %>%
+  group_by(CityName) %>%
+  mutate(mean_value = mean(Data_Value)) %>%
+  select(StateAbbr, StateDesc, CityName, mean_value, GeoLocation) %>%
+  distinct(CityName, .keep_all = TRUE) %>%
+  rename("physical_activity" = mean_value)
+```
+
+```{r edit-heart-disease-data, message= FALSE, warning= FALSE}
+edit_heart_disease <- heart_disease %>%
+  select(StateAbbr, StateDesc, CityName, Data_Value_Type, Data_Value, GeoLocation) %>%
+  filter(Data_Value_Type %in% c("Age-adjusted prevalence")) %>%
+  group_by(CityName) %>%
+  mutate(mean_value = mean(Data_Value)) %>%
+  select(StateAbbr, StateDesc, CityName, mean_value, GeoLocation) %>%
+  distinct(CityName, .keep_all = TRUE) %>%
+  rename("heart_disease" = mean_value)
+```
+
+```{r edit-diabetes-data, message= FALSE, warning= FALSE}
+edit_diabetes <- diabetes %>%
+  select(StateAbbr, StateDesc, CityName, Data_Value_Type, Data_Value, GeoLocation) %>%
+  filter(Data_Value_Type %in% c("Age-adjusted prevalence")) %>%
+  group_by(CityName) %>%
+  mutate(mean_value = mean(Data_Value)) %>%
+  select(StateAbbr, StateDesc, CityName, mean_value, GeoLocation) %>%
+  distinct(CityName, .keep_all = TRUE) %>%
+  rename("diabetes" = mean_value)
+```
+
+```{r edit-kidney-disease-data, message= FALSE, warning= FALSE}
+edit_kidney_disease <- kidney_disease %>%
+  select(StateAbbr, StateDesc, CityName, Data_Value_Type, Data_Value, GeoLocation) %>%
+  filter(Data_Value_Type %in% c("Age-adjusted prevalence")) %>%
+  group_by(CityName) %>%
+  mutate(mean_value = mean(Data_Value)) %>%
+  select(StateAbbr, StateDesc, CityName, mean_value, GeoLocation) %>%
+  distinct(CityName, .keep_all = TRUE) %>%
+  rename("kidney_disease" = mean_value)
+```
+
 # Join Datasets
+
+```{r join-data, warning= FALSE, message= FALSE}
+data_500_cities <- edit_insurance %>%
+  left_join(edit_visits_to_doctor) %>%
+  left_join(edit_medicine_high_bp) %>%
+  left_join(edit_smoking) %>%
+  left_join(edit_binge_drinking) %>%
+  left_join(edit_physical_activity) %>%
+  left_join(edit_heart_disease) %>%
+  left_join(edit_diabetes) %>%
+  left_join(edit_kidney_disease) %>%
+  select(c(StateAbbr, StateDesc, CityName, insurance, visits_to_doctor, medicine_high_bp, smoking, binge_drinking, physical_activity, heart_disease, diabetes, kidney_disease, GeoLocation))
+```
+
+# Glimpse Final Dataset 
+
+```{r glimpse-data, warning= FALSE, message= FALSE}
+glimpse(data_500_cities)
+```
+
