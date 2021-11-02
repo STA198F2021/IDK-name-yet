@@ -180,4 +180,3 @@ data_500_cities <- edit_insurance %>%
 ```{r glimpse-data, warning= FALSE, message= FALSE}
 glimpse(data_500_cities)
 ```
-
