@@ -31,6 +31,10 @@ insurance <- read_excel("~/ Stats 198 Project/data/insurance_500_cities.xlsx")
 visits_to_doctor <- read_excel("~/ Stats 198 Project/data/visits_to_doctor.xlsx")
 ```
 
+```{r upload-medicine-high-bp-data, message= FALSE, warning= FALSE}
+medicine_high_bp <- read_excel("~/ Stats 198 Project/data/medicine_high_bp.xlsx")
+```
+
 ```{r upload-smoking-data, message= FALSE, warning= FALSE}
 smoking <- read_excel("~/ Stats 198 Project/data/smoking.xlsx")
 ```
