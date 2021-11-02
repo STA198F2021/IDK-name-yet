@@ -1,7 +1,207 @@
 ---
-title: "Final Report"
-subtitle: "due November 16, 2021 by 11:59 PM "
-author: "Your names and team name here"
-date: ""
+title: "CDC 500 Cities: Healthcare Access, Behaviors, and Health Outcomes"
+subtitle: "Stat 198 Final Project"
+author: "Maya Ghanem and Isabelle Xiong"
+date: "11/1/2021"
 output: pdf_document
+editor_options: 
+  chunk_output_type: console
 ---
+
+# Description of Data
+
+(Include description of how you edited the data)
+
+```{r setup, include=FALSE, echo= FALSE, message= FALSE, warning= FALSE}
+knitr::opts_chunk$set(echo= TRUE) 
+```
+
+```{r load-data-packages, echo= FALSE, warning= FALSE, message= FALSE}
+library(readr)
+library(tidyverse)
+library(readxl)
+library(dplyr)
+```
+
+```{r upload-insurance-data, echo= FALSE, message= FALSE, warning= FALSE}
+insurance <- read_excel("~/ Stats 198 Project/data/insurance_500_cities.xlsx")
+```
+
+```{r upload-visits-to-doctor-data, echo= FALSE, message= FALSE, warning= FALSE}
+visits_to_doctor <- read_excel("~/ Stats 198 Project/data/visits_to_doctor.xlsx")
+```
+
+```{r upload-medicine-high-bp-data, echo= FALSE, message= FALSE, warning= FALSE}
+medicine_high_bp <- read_excel("~/ Stats 198 Project/data/medicine_high_bp.xlsx")
+```
+
+```{r upload-smoking-data, echo= FALSE, message= FALSE, warning= FALSE}
+smoking <- read_excel("~/ Stats 198 Project/data/smoking.xlsx")
+```
+
+```{r upload-binge-drinking-data, echo= FALSE, message= FALSE, warning= FALSE}
+binge_drinking <- read_excel("~/ Stats 198 Project/data/binge_drinking.xlsx")
+```
+
+```{r upload-physical-activity-data, echo= FALSE, message= FALSE, warning= FALSE}
+physical_activity <- read_excel("~/ Stats 198 Project/data/physical_activity.xlsx")
+```
+
+```{r upload-heart-disease-data, echo= FALSE, message= FALSE, warning= FALSE}
+heart_disease <- read_excel("~/ Stats 198 Project/data/heart_disease.xlsx")
+```
+
+```{r upload-diabetes-data, echo= FALSE, message=FALSE, warning= FALSE}
+diabetes <- read_excel("~/ Stats 198 Project/data/diabetes.xlsx")
+```
+
+```{r upload-kidney-disease-data, echo= FALSE, message= FALSE, warning= FALSE}
+kidney_disease <- read_excel("~/ Stats 198 Project/data/kidney_disease.xlsx")
+```
+
+```{r edit-insurance-data, echo= FALSE, message= FALSE, warning= FALSE}
+edit_insurance <- insurance %>%
+  select(StateAbbr, StateDesc, CityName, Data_Value_Type, Data_Value, GeoLocation) %>%
+  filter(Data_Value_Type %in% c("Age-adjusted prevalence")) %>%
+  group_by(CityName) %>%
+  mutate(mean_value = mean(Data_Value)) %>%
+  select(StateAbbr, StateDesc, CityName, mean_value, GeoLocation) %>%
+  distinct(CityName, .keep_all = TRUE) %>%
+  rename("insurance" = mean_value)
+```
+
+```{r edit-visits-to-doctor-data, echo= FALSE, message= FALSE, warning= FALSE}
+edit_visits_to_doctor <- visits_to_doctor %>%
+  select(StateAbbr, StateDesc, CityName, Data_Value_Type, Data_Value, GeoLocation) %>%
+  filter(Data_Value_Type %in% c("Age-adjusted prevalence")) %>%
+  group_by(CityName) %>%
+  mutate(mean_value = mean(Data_Value)) %>%
+  select(StateAbbr, StateDesc, CityName, mean_value, GeoLocation) %>%
+  distinct(CityName, .keep_all = TRUE) %>%
+  rename("visits_to_doctor" = mean_value)
+```
+
+```{r edit-medicine-high-bp-data, echo= FALSE, message= FALSE, warning= FALSE}
+edit_medicine_high_bp <- medicine_high_bp %>%
+  select(StateAbbr, StateDesc, CityName, Data_Value_Type, Data_Value, GeoLocation) %>%
+  filter(Data_Value_Type %in% c("Age-adjusted prevalence")) %>%
+  group_by(CityName) %>%
+  mutate(mean_value = mean(Data_Value)) %>%
+  select(StateAbbr, StateDesc, CityName, mean_value, GeoLocation) %>%
+  distinct(CityName, .keep_all = TRUE) %>%
+  rename("medicine_high_bp" = mean_value)
+```
+
+```{r edit-smoking-data, echo= FALSE, message= FALSE, warning= FALSE}
+edit_smoking <- smoking %>%
+  select(StateAbbr, StateDesc, CityName, Data_Value_Type, Data_Value, GeoLocation) %>%
+  filter(Data_Value_Type %in% c("Age-adjusted prevalence")) %>%
+  group_by(CityName) %>%
+  mutate(mean_value = mean(Data_Value)) %>%
+  select(StateAbbr, StateDesc, CityName, mean_value, GeoLocation) %>%
+  distinct(CityName, .keep_all = TRUE) %>%
+  rename("smoking" = mean_value)
+```
+
+```{r edit-binge-drinking-data, echo= FALSE, message= FALSE, warning= FALSE}
+edit_binge_drinking <- binge_drinking %>%
+  select(StateAbbr, StateDesc, CityName, Data_Value_Type, Data_Value, GeoLocation) %>%
+  filter(Data_Value_Type %in% c("Age-adjusted prevalence")) %>%
+  group_by(CityName) %>%
+  mutate(mean_value = mean(Data_Value)) %>%
+  select(StateAbbr, StateDesc, CityName, mean_value, GeoLocation) %>%
+  distinct(CityName, .keep_all = TRUE) %>%
+  rename("binge_drinking" = mean_value)
+```
+
+```{r edit-physical-activity, echo= FALSE, message= FALSE, warning= FALSE}
+edit_physical_activity <- physical_activity %>%
+  select(StateAbbr, StateDesc, CityName, Data_Value_Type, Data_Value, GeoLocation) %>%
+  filter(Data_Value_Type %in% c("Age-adjusted prevalence")) %>%
+  group_by(CityName) %>%
+  mutate(mean_value = mean(Data_Value)) %>%
+  select(StateAbbr, StateDesc, CityName, mean_value, GeoLocation) %>%
+  distinct(CityName, .keep_all = TRUE) %>%
+  rename("physical_activity" = mean_value)
+```
+
+```{r edit-heart-disease-data, echo= FALSE, message= FALSE, warning= FALSE}
+edit_heart_disease <- heart_disease %>%
+  select(StateAbbr, StateDesc, CityName, Data_Value_Type, Data_Value, GeoLocation) %>%
+  filter(Data_Value_Type %in% c("Age-adjusted prevalence")) %>%
+  group_by(CityName) %>%
+  mutate(mean_value = mean(Data_Value)) %>%
+  select(StateAbbr, StateDesc, CityName, mean_value, GeoLocation) %>%
+  distinct(CityName, .keep_all = TRUE) %>%
+  rename("heart_disease" = mean_value)
+```
+
+```{r edit-diabetes-data, echo= FALSE, message= FALSE, warning= FALSE}
+edit_diabetes <- diabetes %>%
+  select(StateAbbr, StateDesc, CityName, Data_Value_Type, Data_Value, GeoLocation) %>%
+  filter(Data_Value_Type %in% c("Age-adjusted prevalence")) %>%
+  group_by(CityName) %>%
+  mutate(mean_value = mean(Data_Value)) %>%
+  select(StateAbbr, StateDesc, CityName, mean_value, GeoLocation) %>%
+  distinct(CityName, .keep_all = TRUE) %>%
+  rename("diabetes" = mean_value)
+```
+
+```{r edit-kidney-disease-data, echo= FALSE, message= FALSE, warning= FALSE}
+edit_kidney_disease <- kidney_disease %>%
+  select(StateAbbr, StateDesc, CityName, Data_Value_Type, Data_Value, GeoLocation) %>%
+  filter(Data_Value_Type %in% c("Age-adjusted prevalence")) %>%
+  group_by(CityName) %>%
+  mutate(mean_value = mean(Data_Value)) %>%
+  select(StateAbbr, StateDesc, CityName, mean_value, GeoLocation) %>%
+  distinct(CityName, .keep_all = TRUE) %>%
+  rename("kidney_disease" = mean_value)
+```
+
+```{r join-data, echo= FALSE, warning= FALSE, message= FALSE}
+data_500_cities <- edit_insurance %>%
+  left_join(edit_visits_to_doctor) %>%
+  left_join(edit_medicine_high_bp) %>%
+  left_join(edit_smoking) %>%
+  left_join(edit_binge_drinking) %>%
+  left_join(edit_physical_activity) %>%
+  left_join(edit_heart_disease) %>%
+  left_join(edit_diabetes) %>%
+  left_join(edit_kidney_disease) %>%
+  select(c(StateAbbr, StateDesc, CityName, insurance, visits_to_doctor, medicine_high_bp, smoking, binge_drinking, physical_activity, heart_disease, diabetes, kidney_disease, GeoLocation))
+```
+# Research Questions
+
+1) Do cities with a greater lack of healthcare access have poorer mental health and/or physical health outcomes? 
+
+2)Does healthcare access, mental health, and/or physical health outcomes vary by state?
+
+# Variables of Interest
+
+## Explanatory Variables: 
+
+1) Healthcare Access for Adults (18+): Percent of City Population that Lacks Insurance, Percent of City Population with visits to doctor for routine checkup within the past year, Percent of City Population who have high blood pressure and are taking medicine for high blood pressure control.
+
+2) Geographic Distribution by State
+
+## Response Variables: 
+
+1) Behavior for Adults (18+): Percent of city population currently smoking, percent of city population currently reporting binge drinking habits, percent of city population reporting No leisure-time physical activity
+
+2) Health Outcomes for Adults (18+): Percent of city population with coronary heart disease, percent of population diagnosed with diabetes, percent of city population with kidney disease  
+
+# Linear Regressions
+
+## Initial Visualizations
+
+## Regressions for Healthcare Access and Behaviors Variables
+
+## Regressions for Healthcare Access and Health Outcomes
+
+## Regression With Most Correlated Variables
+
+# ANOVA Testing
+
+## Initial Visualizations
+
+## Does (Insert Variable) Have Variation Across States?
