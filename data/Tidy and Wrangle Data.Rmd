@@ -1,0 +1,60 @@
+---
+title: "Wrangle and Tidy Data"
+subtitle: "Stat 198 Project"
+author: "Maya Ghanem and Isabelle Xiong"
+date: "11/1/2021"
+output: pdf_document
+editor_options: 
+  chunk_output_type: console
+---
+
+# Set Up
+
+```{r setup, include=FALSE, echo= FALSE, message= FALSE, warning= FALSE}
+knitr::opts_chunk$set(echo= TRUE) 
+```
+
+```{r load-data-packages, echo= FALSE, warning= FALSE, message= FALSE}
+library(readr)
+library(tidyverse)
+library(readxl)
+library(dplyr)
+```
+
+# Upload Data
+
+```{r upload-insurance-data, message= FALSE, warning= FALSE}
+insurance <- read_excel("~/ Stats 198 Project/data/insurance_500_cities.xlsx")
+```
+
+```{r upload-visits-to-doctor-data, message= FALSE, warning= FALSE}
+visits_to_doctor <- read_excel("~/ Stats 198 Project/data/visits_to_doctor.xlsx")
+```
+
+```{r upload-smoking-data, message= FALSE, warning= FALSE}
+smoking <- read_excel("~/ Stats 198 Project/data/smoking.xlsx")
+```
+
+```{r upload-binge-drinking-data, message= FALSE, warning= FALSE}
+binge_drinking <- read_excel("~/ Stats 198 Project/data/binge_drinking.xlsx")
+```
+
+```{r upload-physical-activity-data, message= FALSE, warning= FALSE}
+physical_activity <- read_excel("~/ Stats 198 Project/data/physical_activity.xlsx")
+```
+
+```{r upload-heart-disease-data, message= FALSE, warning= FALSE}
+heart_disease <- read_excel("~/ Stats 198 Project/data/heart_disease.xlsx")
+```
+
+```{r upload-diabetes-data, message= FALSE, warning= FALSE}
+diabetes <- read_excel("~/ Stats 198 Project/data/diabetes.xlsx")
+```
+
+```{r upload-kidney-disease-data, message= FALSE, warning= FALSE}
+kidney_disease <- read_excel("~/ Stats 198 Project/data/kidney_disease.xlsx")
+```
+
+# Select, Filter, Summarize, and Rename Data
+
+# Join Datasets
