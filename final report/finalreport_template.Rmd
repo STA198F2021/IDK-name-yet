@@ -21,6 +21,10 @@ library(readr)
 library(tidyverse)
 library(readxl)
 library(dplyr)
+library(tidymodels)
+library(patchwork)
+library(plotly)
+library(widgetframe)
 ```
 
 ```{r upload-insurance-data, echo= FALSE, message= FALSE, warning= FALSE}
@@ -192,11 +196,109 @@ data_500_cities <- edit_insurance %>%
 
 # Linear Regressions
 
-## Initial Visualizations
-
 ## Regressions for Healthcare Access and Behaviors Variables
 
+### Fit with Interaction Variables
+
+1) Access Variables vs. Smoking
+
+```{r linear-regression-access-smoking, warning= FALSE, message= FALSE}
+int_access_smoking_fit <- linear_reg() %>%
+  set_engine("lm") %>%
+  fit(smoking ~ insurance + visits_to_doctor + medicine_high_bp + (insurance * visits_to_doctor) + (insurance * medicine_high_bp) + (visits_to_doctor * medicine_high_bp), data = data_500_cities)
+int_access_smoking_fit_aug <- augment(int_access_smoking_fit$fit)
+tidy(int_access_smoking_fit) %>%
+  print()
+```
+
+```{r adjusted-r-squared-access-smoking, warning= FALSE, message= FALSE}
+glance(int_access_smoking_fit)$adj.r.squared %>%
+  print()
+```
+
+2) Access Variables vs. Binge Drinking
+
+```{r linear-regression-access-binge-drinking, warning= FALSE, message= FALSE}
+int_access_binge_drinking_fit <- linear_reg() %>%
+  set_engine("lm") %>%
+  fit(binge_drinking ~ insurance + visits_to_doctor + medicine_high_bp + (insurance * visits_to_doctor) + (insurance * medicine_high_bp) + (visits_to_doctor * medicine_high_bp), data = data_500_cities)
+int_access_binge_drinking_fit_aug <- augment(int_access_binge_drinking_fit$fit)
+tidy(int_access_binge_drinking_fit) %>%
+  print()
+```
+
+```{r adjusted-r-squared-access-binge-drinking, warning= FALSE, message= FALSE}
+glance(int_access_binge_drinking_fit)$adj.r.squared %>%
+  print()
+```
+
+3) Access Variables vs. Physical Activity
+
+```{r linear-regression-access-physical-activity, warning= FALSE, message= FALSE}
+int_access_physical_activity_fit <- linear_reg() %>%
+  set_engine("lm") %>%
+  fit(physical_activity ~ insurance + visits_to_doctor + medicine_high_bp + (insurance * visits_to_doctor) + (insurance * medicine_high_bp) + (visits_to_doctor * medicine_high_bp), data = data_500_cities)
+int_access_physical_activity_fit_aug <- augment(int_access_physical_activity_fit$fit)
+tidy(int_access_physical_activity_fit) %>%
+  print()
+```
+
+```{r adjusted-r-squared-access-physical-activity, warning= FALSE, message= FALSE}
+glance(int_access_physical_activity_fit)$adj.r.squared %>%
+  print()
+```
+
 ## Regressions for Healthcare Access and Health Outcomes
+
+### Fit with Interaction Variables
+
+4) Access Variables vs. Heart Disease
+
+```{r linear-regression-access-heart-disease, warning= FALSE, message= FALSE}
+int_access_heart_disease_fit <- linear_reg() %>%
+  set_engine("lm") %>%
+  fit(heart_disease ~ insurance + visits_to_doctor + medicine_high_bp + (insurance * visits_to_doctor) + (insurance * medicine_high_bp) + (visits_to_doctor * medicine_high_bp), data = data_500_cities)
+int_access_heart_disease_fit_aug <- augment(int_access_heart_disease_fit$fit)
+tidy(int_access_heart_disease_fit) %>%
+  print()
+```
+
+```{r adjusted-r-squared-access-heart-disease, warning= FALSE, message= FALSE}
+glance(int_access_heart_disease_fit)$adj.r.squared %>%
+  print()
+```
+
+5) Access Variables vs. Diabetes
+
+```{r linear-regression-access-diabetes, warning= FALSE, message= FALSE}
+int_access_diabetes_fit <- linear_reg() %>%
+  set_engine("lm") %>%
+  fit(diabetes ~ insurance + visits_to_doctor + medicine_high_bp + (insurance * visits_to_doctor) + (insurance * medicine_high_bp) + (visits_to_doctor * medicine_high_bp), data = data_500_cities)
+int_access_diabetes_fit_aug <- augment(int_access_diabetes_fit$fit)
+tidy(int_access_diabetes_fit) %>%
+  print()
+```
+
+```{r adjusted-r-squared-access-diabetes, warning= FALSE, message= FALSE}
+glance(int_access_diabetes_fit)$adj.r.squared %>%
+  print()
+```
+
+6) Access Variables vs. Kidney Disease
+
+```{r linear-regression-access-kidney-disease, warning= FALSE, message= FALSE}
+int_access_kidney_disease_fit <- linear_reg() %>%
+  set_engine("lm") %>%
+  fit(kidney_disease ~ insurance + visits_to_doctor + medicine_high_bp + (insurance * visits_to_doctor) + (insurance * medicine_high_bp) + (visits_to_doctor * medicine_high_bp), data = data_500_cities)
+int_access_kidney_disease_fit_aug <- augment(int_access_kidney_disease_fit$fit)
+tidy(int_access_kidney_disease_fit) %>%
+  print()
+```
+
+```{r adjusted-r-squared-access-kidney-disease, warning= FALSE, message= FALSE}
+glance(int_access_kidney_disease_fit)$adj.r.squared %>%
+  print()
+```
 
 ## Regression With Most Correlated Variables
 
