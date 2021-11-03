@@ -405,6 +405,8 @@ NOTE: A linear regression is not fitting for this relationship because there is 
 
 ## Initial Visualizations
 
+NOTE: Use initial visualizations to check if assumptions of ANOVA are met!
+
 ## Overall Tests
 
 ```{r ANOVA-insurance-state, warning= FALSE, message= FALSE}
@@ -450,4 +452,39 @@ summary(aov(diabetes~StateDesc,data=data_500_cities)) %>%
 ```{r ANOVA-kidney-disease-state, warning= FALSE, message= FALSE}
 summary(aov(kidney_disease~StateDesc,data=data_500_cities)) %>%
   print()
+```
+
+It seems like pretty much all the overall tests indicate significant variance across the groups.
+
+## Step Down Tests
+
+```{r step-down-insurance-state, warning= FALSE, message= FALSE}
+insurance_state_pair <- pairwise.t.test(data_500_cities$insurance,    data_500_cities$StateDesc, p.adj = "holm")
+sig_ins_state_pairs <- broom::tidy(insurance_state_pair) %>%
+  filter(p.value<0.05) %>%
+  arrange(group1,group2)
+nrow(sig_ins_state_pairs)
+print(sig_ins_state_pairs)
+```
+
+The overall ANOVA test says there is a significance but the Step Down stests show no significant pairs?
+
+```{r step-down-doctor-state, warning= FALSE, message= FALSE}
+doctor_state_pair <- pairwise.t.test(data_500_cities$visits_to_doctor,    data_500_cities$StateDesc, p.adj = "holm")
+sig_doctor_state_pairs <- broom::tidy(doctor_state_pair) %>%
+  filter(p.value<0.05) %>%
+  arrange(group1,group2)
+nrow(sig_doctor_state_pairs)
+print(sig_doctor_state_pairs)
+```
+
+Ok so there is clearly an issue. I think I am interpreting the F-statistic incorrectly?
+
+```{r step-down-smoking-state, warning= FALSE, message= FALSE}
+smoking_state_pair <- pairwise.t.test(data_500_cities$smoking,    data_500_cities$StateDesc, p.adj = "holm")
+sig_smoking_state_pairs <- broom::tidy(smoking_state_pair) %>%
+  filter(p.value<0.05) %>%
+  arrange(group1,group2)
+nrow(sig_smoking_state_pairs)
+print(sig_smoking_state_pairs)
 ```
