@@ -208,7 +208,7 @@ NOTE: We will not do third order interactions because they are beyond the scope 
 
 ### Fit with Interaction Variables
 
-1) Access Variables vs. Smoking
+#### 1) Access Variables vs. Smoking
 
 ```{r linear-regression-access-smoking, warning= FALSE, message= FALSE}
 int_access_smoking_fit <- linear_reg() %>%
@@ -237,7 +237,14 @@ int_access_smoking_fit_aug %>%
   )
 ```
 
-2) Access Variables vs. Binge Drinking
+```{r graph-regression-access-smoking, warning= FALSE, message= FALSE}
+data_500_cities %>%
+ggplot( mapping = aes(x = insurance, y = smoking)) + 
+geom_point(size = 0.25) +
+geom_line(data = int_access_smoking_fit_aug, mapping = aes(x = insurance, y = .fitted))
+```
+
+#### 2) Access Variables vs. Binge Drinking
 
 ```{r linear-regression-access-binge-drinking, warning= FALSE, message= FALSE}
 int_access_binge_drinking_fit <- linear_reg() %>%
@@ -266,16 +273,9 @@ int_access_binge_drinking_fit_aug %>%
   )
 ```
 
-```{r graph-regression-access-smoking, warning= FALSE, message= FALSE}
-data_500_cities %>%
-ggplot( mapping = aes(x = insurance, y = smoking)) + 
-geom_point(size = 0.25) +
-geom_line(data = int_access_smoking_fit_aug, mapping = aes(x = insurance, y = .fitted))
-```
-
 Why is this graph not working? Ask at some point
 
-3) Access Variables vs. Physical Activity
+#### 3) Access Variables vs. Physical Activity
 
 ```{r linear-regression-access-physical-activity, warning= FALSE, message= FALSE}
 int_access_physical_activity_fit <- linear_reg() %>%
@@ -308,7 +308,7 @@ int_access_physical_activity_fit_aug %>%
 
 ### Fit with Interaction Variables
 
-4) Access Variables vs. Heart Disease
+#### 4) Access Variables vs. Heart Disease
 
 ```{r linear-regression-access-heart-disease, warning= FALSE, message= FALSE}
 int_access_heart_disease_fit <- linear_reg() %>%
@@ -339,7 +339,7 @@ int_access_heart_disease_fit_aug %>%
 
 NOTE: A linear regression is not fitting for this relationship because there is a significant pattern in the residual plot.
 
-5) Access Variables vs. Diabetes
+#### 5) Access Variables vs. Diabetes
 
 ```{r linear-regression-access-diabetes, warning= FALSE, message= FALSE}
 int_access_diabetes_fit <- linear_reg() %>%
@@ -368,7 +368,7 @@ int_access_diabetes_fit_aug %>%
   )
 ```
 
-6) Access Variables vs. Kidney Disease
+#### 6) Access Variables vs. Kidney Disease
 
 ```{r linear-regression-access-kidney-disease, warning= FALSE, message= FALSE}
 int_access_kidney_disease_fit <- linear_reg() %>%
@@ -405,4 +405,49 @@ NOTE: A linear regression is not fitting for this relationship because there is 
 
 ## Initial Visualizations
 
-## Does (Insert Variable) Have Variation Across States?
+## Overall Tests
+
+```{r ANOVA-insurance-state, warning= FALSE, message= FALSE}
+summary(aov(insurance~StateDesc,data=data_500_cities)) %>%
+  print()
+```
+
+```{r ANOVA-visits-to-doctor-state, warning= FALSE, message= FALSE}
+summary(aov(visits_to_doctor~StateDesc,data=data_500_cities)) %>%
+  print()
+```
+
+```{r ANOVA-medicine-high-bp-state, warning= FALSE, message= FALSE}
+summary(aov(medicine_high_bp~StateDesc,data=data_500_cities)) %>%
+  print()
+```
+
+```{r ANOVA-smoking-state, warning= FALSE, message= FALSE}
+summary(aov(smoking~StateDesc,data=data_500_cities)) %>%
+  print()
+```
+
+```{r ANOVA-binge-drinking-state, warning= FALSE, message= FALSE}
+summary(aov(binge_drinking~StateDesc,data=data_500_cities)) %>%
+  print()
+```
+
+```{r ANOVA-physical-activity-state, warning= FALSE, message= FALSE}
+summary(aov(physical_activity~StateDesc,data=data_500_cities)) %>%
+  print()
+```
+
+```{r ANOVA-heart-disease-state, warning= FALSE, message= FALSE}
+summary(aov(heart_disease~StateDesc,data=data_500_cities)) %>%
+  print()
+```
+
+```{r ANOVA-diabetes-state, warning= FALSE, message= FALSE}
+summary(aov(diabetes~StateDesc,data=data_500_cities)) %>%
+  print()
+```
+
+```{r ANOVA-kidney-disease-state, warning= FALSE, message= FALSE}
+summary(aov(kidney_disease~StateDesc,data=data_500_cities)) %>%
+  print()
+```
