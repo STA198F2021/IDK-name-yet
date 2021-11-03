@@ -266,6 +266,15 @@ int_access_binge_drinking_fit_aug %>%
   )
 ```
 
+```{r graph-regression-access-smoking, warning= FALSE, message= FALSE}
+data_500_cities %>%
+ggplot( mapping = aes(x = insurance, y = smoking)) + 
+geom_point(size = 0.25) +
+geom_line(data = int_access_smoking_fit_aug, mapping = aes(x = insurance, y = .fitted))
+```
+
+Why is this graph not working? Ask at some point
+
 3) Access Variables vs. Physical Activity
 
 ```{r linear-regression-access-physical-activity, warning= FALSE, message= FALSE}
