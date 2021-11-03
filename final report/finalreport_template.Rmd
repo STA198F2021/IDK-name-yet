@@ -196,6 +196,12 @@ data_500_cities <- edit_insurance %>%
 
 # Linear Regressions
 
+NOTE: Create regressions first between the explanatory (access) variables-- this can indicate what kind of interactions are needed.
+
+--> insurance vs. visits to doctor
+--> insurance vs. medicine
+--> visits to doctor vs. medicine
+
 ## Regressions for Healthcare Access and Behaviors Variables
 
 ### Fit with Interaction Variables
@@ -216,6 +222,19 @@ glance(int_access_smoking_fit)$adj.r.squared %>%
   print()
 ```
 
+```{r residuals-access-smoking, warning = FALSE, message= FALSE}
+int_access_smoking_fit_aug %>%
+  ggplot(mapping = aes(x = .fitted, y = .std.resid)) + 
+  geom_point() + 
+  geom_hline(yintercept = 0, color = "purple", lty = "dashed") + 
+  labs(
+    title = "Residuals vs. Predicted City Percentage of Smoking Adults",
+    subtitle = "Data From CDC 500 Cities",
+    x = "Predicted Percentage of Smokers",
+    y = "Standard Residuals"
+  )
+```
+
 2) Access Variables vs. Binge Drinking
 
 ```{r linear-regression-access-binge-drinking, warning= FALSE, message= FALSE}
@@ -232,6 +251,19 @@ glance(int_access_binge_drinking_fit)$adj.r.squared %>%
   print()
 ```
 
+```{r residuals-access-binge-drinking, warning = FALSE, message= FALSE}
+int_access_binge_drinking_fit_aug %>%
+  ggplot(mapping = aes(x = .fitted, y = .std.resid)) + 
+  geom_point() + 
+  geom_hline(yintercept = 0, color = "purple", lty = "dashed") + 
+  labs(
+    title = "Residuals vs. Predicted Percentage of City Reporting Binge Drinking",
+    subtitle = "Data From CDC 500 Cities",
+    x = "Predicted Percentage of Adults Reporting Binge Drinking",
+    y = "Standard Residuals"
+  )
+```
+
 3) Access Variables vs. Physical Activity
 
 ```{r linear-regression-access-physical-activity, warning= FALSE, message= FALSE}
@@ -246,6 +278,19 @@ tidy(int_access_physical_activity_fit) %>%
 ```{r adjusted-r-squared-access-physical-activity, warning= FALSE, message= FALSE}
 glance(int_access_physical_activity_fit)$adj.r.squared %>%
   print()
+```
+
+```{r residuals-access-physical-activity, warning = FALSE, message= FALSE}
+int_access_physical_activity_fit_aug %>%
+  ggplot(mapping = aes(x = .fitted, y = .std.resid)) + 
+  geom_point() + 
+  geom_hline(yintercept = 0, color = "purple", lty = "dashed") + 
+  labs(
+    title = "Residuals vs. Predicted Percentage of City Reporting No Physical Activity",
+    subtitle = "Data From CDC 500 Cities",
+    x = "Predicted Percentage Reporting No Lesisure Time Physical Activity",
+    y = "Standard Residuals"
+  )
 ```
 
 ## Regressions for Healthcare Access and Health Outcomes
@@ -268,6 +313,21 @@ glance(int_access_heart_disease_fit)$adj.r.squared %>%
   print()
 ```
 
+```{r residuals-access-heart-disease, warning = FALSE, message= FALSE}
+int_access_heart_disease_fit_aug %>%
+  ggplot(mapping = aes(x = .fitted, y = .std.resid)) + 
+  geom_point() + 
+  geom_hline(yintercept = 0, color = "purple", lty = "dashed") + 
+  labs(
+    title = "Residuals vs. Predicted City Percentage of Adults with Coronary Heart Disease",
+    subtitle = "Data From CDC 500 Cities",
+    x = "Predicted Percentage of Adults with Coronary Heart Disease",
+    y = "Standard Residuals"
+  )
+```
+
+NOTE: A linear regression is not fitting for this relationship because there is a significant pattern in the residual plot.
+
 5) Access Variables vs. Diabetes
 
 ```{r linear-regression-access-diabetes, warning= FALSE, message= FALSE}
@@ -282,6 +342,19 @@ tidy(int_access_diabetes_fit) %>%
 ```{r adjusted-r-squared-access-diabetes, warning= FALSE, message= FALSE}
 glance(int_access_diabetes_fit)$adj.r.squared %>%
   print()
+```
+
+```{r residuals-access-diabetes, warning = FALSE, message= FALSE}
+int_access_diabetes_fit_aug %>%
+  ggplot(mapping = aes(x = .fitted, y = .std.resid)) + 
+  geom_point() + 
+  geom_hline(yintercept = 0, color = "purple", lty = "dashed") + 
+  labs(
+    title = "Residuals vs. Predicted City Percentage of Adults with Diabetes",
+    subtitle = "Data From CDC 500 Cities",
+    x = "Predicted Percentage of Adults with Diabetes",
+    y = "Standard Residuals"
+  )
 ```
 
 6) Access Variables vs. Kidney Disease
@@ -299,6 +372,21 @@ tidy(int_access_kidney_disease_fit) %>%
 glance(int_access_kidney_disease_fit)$adj.r.squared %>%
   print()
 ```
+
+```{r residuals-access-kidney-disease, warning = FALSE, message= FALSE}
+int_access_kidney_disease_fit_aug %>%
+  ggplot(mapping = aes(x = .fitted, y = .std.resid)) + 
+  geom_point() + 
+  geom_hline(yintercept = 0, color = "purple", lty = "dashed") + 
+  labs(
+    title = "Residuals vs. Predicted City Percentage of Adults with Kidney Disease",
+    subtitle = "Data From CDC 500 Cities",
+    x = "Predicted Percentage of Adults with Diabetes",
+    y = "Standard Residuals"
+  )
+```
+
+NOTE: A linear regression is not fitting for this relationship because there is a significant pattern in the residual plot.
 
 ## Regression With Most Correlated Variables
 
