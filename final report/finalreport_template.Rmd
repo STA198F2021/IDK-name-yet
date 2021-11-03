@@ -202,6 +202,8 @@ NOTE: Create regressions first between the explanatory (access) variables-- this
 --> insurance vs. medicine
 --> visits to doctor vs. medicine
 
+NOTE: We will not do third order interactions because they are beyond the scope of this course
+
 ## Regressions for Healthcare Access and Behaviors Variables
 
 ### Fit with Interaction Variables
