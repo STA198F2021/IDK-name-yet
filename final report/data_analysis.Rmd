@@ -26,6 +26,10 @@ library(patchwork)
 library(plotly)
 library(widgetframe)
 library(here)
+library(sf)
+library(rnaturalearth)
+library(rnaturalearthdata)
+library(rgeos)
 ```
 
 ```{r upload-insurance-data, echo= FALSE, message= FALSE, warning= FALSE}
@@ -414,6 +418,101 @@ int_access_physical_activity_fit_aug %>%
 
 ## Regressions for Healthcare Access and Health Outcomes
 
+###Fit without Interaction Variables
+
+#### 4) Access Variables vs. Heart Disease
+
+```{r linear-regression-access-heart-disease-no-int, warning= FALSE, message= FALSE}
+access_heart_disease_fit <- linear_reg() %>%
+  set_engine("lm") %>%
+  fit(heart_disease ~ insurance + visits_to_doctor + medicine_high_bp, data = data_500_cities)
+access_heart_disease_fit_aug <- augment(access_heart_disease_fit$fit)
+tidy(access_heart_disease_fit) %>%
+  print()
+```
+
+```{r adjusted-r-squared-access-heart-disease-no-int, warning= FALSE, message= FALSE}
+glance(access_heart_disease_fit)$adj.r.squared %>%
+  print()
+```
+
+```{r residuals-access-heart-disease-no-int, warning = FALSE, message= FALSE}
+access_heart_disease_fit_aug %>%
+  ggplot(mapping = aes(x = .fitted, y = .std.resid)) + 
+  geom_point() + 
+  geom_hline(yintercept = 0, color = "purple", lty = "dashed") + 
+  labs(
+    title = "Residuals vs. Predicted City Percentage of Adults with Coronary Heart Disease",
+    subtitle = "Data From CDC 500 Cities",
+    x = "Predicted Percentage of Adults with Coronary Heart Disease",
+    y = "Standard Residuals"
+  )
+```
+
+NOTE: A linear regression is not fitting for this relationship because there is a significant pattern in the residual plot.
+
+#### 5) Access Variables vs. Diabetes
+
+```{r linear-regression-access-diabetes-no-int, warning= FALSE, message= FALSE}
+access_diabetes_fit <- linear_reg() %>%
+  set_engine("lm") %>%
+  fit(diabetes ~ insurance + visits_to_doctor + medicine_high_bp, data = data_500_cities)
+access_diabetes_fit_aug <- augment(access_diabetes_fit$fit)
+tidy(access_diabetes_fit) %>%
+  print()
+```
+
+```{r adjusted-r-squared-access-diabetes-no-int, warning= FALSE, message= FALSE}
+glance(access_diabetes_fit)$adj.r.squared %>%
+  print()
+```
+
+```{r residuals-access-diabetes-no-int, warning = FALSE, message= FALSE}
+access_diabetes_fit_aug %>%
+  ggplot(mapping = aes(x = .fitted, y = .std.resid)) + 
+  geom_point() + 
+  geom_hline(yintercept = 0, color = "purple", lty = "dashed") + 
+  labs(
+    title = "Residuals vs. Predicted City Percentage of Adults with Diabetes",
+    subtitle = "Data From CDC 500 Cities",
+    x = "Predicted Percentage of Adults with Diabetes",
+    y = "Standard Residuals"
+  )
+```
+
+NOTE: A linear regression is not fitting for this relationship because there is a significant pattern in the residual plot.
+
+#### 6) Access Variables vs. Kidney Disease
+
+```{r linear-regression-access-kidney-disease-no-int, warning= FALSE, message= FALSE}
+access_kidney_disease_fit <- linear_reg() %>%
+  set_engine("lm") %>%
+  fit(kidney_disease ~ insurance + visits_to_doctor + medicine_high_bp, data = data_500_cities)
+access_kidney_disease_fit_aug <- augment(access_kidney_disease_fit$fit)
+tidy(access_kidney_disease_fit) %>%
+  print()
+```
+
+```{r adjusted-r-squared-access-kidney-disease-no-int, warning= FALSE, message= FALSE}
+glance(access_kidney_disease_fit)$adj.r.squared %>%
+  print()
+```
+
+```{r residuals-access-kidney-disease-no-int, warning = FALSE, message= FALSE}
+access_kidney_disease_fit_aug %>%
+  ggplot(mapping = aes(x = .fitted, y = .std.resid)) + 
+  geom_point() + 
+  geom_hline(yintercept = 0, color = "purple", lty = "dashed") + 
+  labs(
+    title = "Residuals vs. Predicted City Percentage of Adults with Kidney Disease",
+    subtitle = "Data From CDC 500 Cities",
+    x = "Predicted Percentage of Adults with Diabetes",
+    y = "Standard Residuals"
+  )
+```
+
+NOTE: A linear regression is not fitting for this relationship because there is a significant pattern in the residual plot.
+
 ### Fit with Interaction Variables
 
 #### 4) Access Variables vs. Heart Disease
@@ -596,3 +695,5 @@ sig_smoking_state_pairs <- broom::tidy(smoking_state_pair) %>%
 nrow(sig_smoking_state_pairs)
 print(sig_smoking_state_pairs)
 ```
+
+### Map Visualization
