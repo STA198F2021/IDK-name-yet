@@ -307,6 +307,13 @@ access_physical_activity_fit_aug %>%
   )
 ```
 
+```{r graph-regression-access-physical-activity-no-int, warning= FALSE, message= FALSE}
+data_500_cities %>%
+ggplot( mapping = aes(x = insurance, y = physical_activity)) + 
+geom_point(size = 0.25) +
+geom_smooth(method = "lm", data = access_physical_activity_fit_aug, mapping = aes(x = insurance, y = .fitted))
+```
+
 ### Fit with Interaction Variables
 
 #### 1) Access Variables vs. Smoking
