@@ -289,6 +289,24 @@ tidy(access_physical_activity_fit) %>%
   print()
 ```
 
+```{r adjusted-r-squared-access-physical-activity-no-int, warning= FALSE, message= FALSE}
+glance(access_physical_activity_fit)$adj.r.squared %>%
+  print()
+```
+
+```{r residuals-access-physical-activity-no-int, warning = FALSE, message= FALSE}
+access_physical_activity_fit_aug %>%
+  ggplot(mapping = aes(x = .fitted, y = .std.resid)) + 
+  geom_point() + 
+  geom_hline(yintercept = 0, color = "purple", lty = "dashed") + 
+  labs(
+    title = "Residuals vs. Predicted Percentage of City Reporting No Physical Activity",
+    subtitle = "Data From CDC 500 Cities",
+    x = "Predicted Percentage Reporting No Lesisure Time Physical Activity",
+    y = "Standard Residuals"
+  )
+```
+
 ### Fit with Interaction Variables
 
 #### 1) Access Variables vs. Smoking
