@@ -242,6 +242,17 @@ geom_point(size = 0.25) +
 geom_smooth(method = "lm", data = access_smoking_fit_aug, mapping = aes(x = insurance, y = .fitted))
 ```
 
+#### 2) Access Variables vs. Binge Drinking
+
+```{r linear-regression-access-binge-drinking-no-int, warning= FALSE, message= FALSE}
+access_binge_drinking_fit <- linear_reg() %>%
+  set_engine("lm") %>%
+  fit(binge_drinking ~ insurance + visits_to_doctor + medicine_high_bp, data = data_500_cities)
+access_binge_drinking_fit_aug <- augment(access_binge_drinking_fit$fit)
+tidy(access_binge_drinking_fit) %>%
+  print()
+```
+
 ### Fit with Interaction Variables
 
 #### 1) Access Variables vs. Smoking
