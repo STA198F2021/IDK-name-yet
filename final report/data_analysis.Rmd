@@ -271,7 +271,6 @@ access_binge_drinking_fit_aug %>%
   )
 ```
 
-
 ```{r graph-regression-access-binge-drinking-no-int, warning= FALSE, message= FALSE}
 data_500_cities %>%
 ggplot( mapping = aes(x = insurance, y = binge_drinking)) + 
@@ -279,6 +278,16 @@ geom_point(size = 0.25) +
 geom_smooth(data = access_binge_drinking_fit_aug, mapping = aes(x = insurance, y = .fitted))
 ```
 
+#### 3) Access Variables vs. Physical Activity
+
+```{r linear-regression-access-physical-activity-no int, warning= FALSE, message= FALSE}
+access_physical_activity_fit <- linear_reg() %>%
+  set_engine("lm") %>%
+  fit(physical_activity ~ insurance + visits_to_doctor + medicine_high_bp, data = data_500_cities)
+access_physical_activity_fit_aug <- augment(access_physical_activity_fit$fit)
+tidy(access_physical_activity_fit) %>%
+  print()
+```
 
 ### Fit with Interaction Variables
 
@@ -376,13 +385,6 @@ int_access_physical_activity_fit_aug %>%
     x = "Predicted Percentage Reporting No Lesisure Time Physical Activity",
     y = "Standard Residuals"
   )
-```
-
-```{r graph-regression-access-physical-activity-no-int, warning= FALSE, message= FALSE}
-data_500_cities %>%
-ggplot( mapping = aes(x = insurance, y = physical_activity)) + 
-geom_point(size = 0.25) +
-geom_smooth(method = "lm", data = int_access_physical_activity_fit_aug, mapping = aes(x = insurance, y = .fitted))
 ```
 
 ## Regressions for Healthcare Access and Health Outcomes
