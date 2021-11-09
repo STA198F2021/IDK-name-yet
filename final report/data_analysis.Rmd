@@ -253,6 +253,24 @@ tidy(access_binge_drinking_fit) %>%
   print()
 ```
 
+```{r adjusted-r-squared-access-binge-drinking-no-int, warning= FALSE, message= FALSE}
+glance(access_binge_drinking_fit)$adj.r.squared %>%
+  print()
+```
+
+```{r residuals-access-binge-drinking-no-int, warning = FALSE, message= FALSE}
+access_binge_drinking_fit_aug %>%
+  ggplot(mapping = aes(x = .fitted, y = .std.resid)) + 
+  geom_point() + 
+  geom_hline(yintercept = 0, color = "purple", lty = "dashed") + 
+  labs(
+    title = "Residuals vs. Predicted Percentage of City Reporting Binge Drinking",
+    subtitle = "Data From CDC 500 Cities",
+    x = "Predicted Percentage of Adults Reporting Binge Drinking",
+    y = "Standard Residuals"
+  )
+```
+
 ### Fit with Interaction Variables
 
 #### 1) Access Variables vs. Smoking
