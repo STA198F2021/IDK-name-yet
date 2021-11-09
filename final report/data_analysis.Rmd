@@ -25,42 +25,43 @@ library(tidymodels)
 library(patchwork)
 library(plotly)
 library(widgetframe)
+library(here)
 ```
 
 ```{r upload-insurance-data, echo= FALSE, message= FALSE, warning= FALSE}
-insurance <- read_excel("~/ Stats 198 Project/data/insurance_500_cities.xlsx")
+insurance <- read_excel(here("data/insurance_500_cities.xlsx"))
 ```
 
 ```{r upload-visits-to-doctor-data, echo= FALSE, message= FALSE, warning= FALSE}
-visits_to_doctor <- read_excel("~/ Stats 198 Project/data/visits_to_doctor.xlsx")
+visits_to_doctor <- read_excel(here("data/visits_to_doctor.xlsx"))
 ```
 
 ```{r upload-medicine-high-bp-data, echo= FALSE, message= FALSE, warning= FALSE}
-medicine_high_bp <- read_excel("~/ Stats 198 Project/data/medicine_high_bp.xlsx")
+medicine_high_bp <- read_excel(here("data/medicine_high_bp.xlsx"))
 ```
 
 ```{r upload-smoking-data, echo= FALSE, message= FALSE, warning= FALSE}
-smoking <- read_excel("~/ Stats 198 Project/data/smoking.xlsx")
+smoking <- read_excel(here("data/smoking.xlsx"))
 ```
 
 ```{r upload-binge-drinking-data, echo= FALSE, message= FALSE, warning= FALSE}
-binge_drinking <- read_excel("~/ Stats 198 Project/data/binge_drinking.xlsx")
+binge_drinking <- read_excel(here("data/binge_drinking.xlsx"))
 ```
 
 ```{r upload-physical-activity-data, echo= FALSE, message= FALSE, warning= FALSE}
-physical_activity <- read_excel("~/ Stats 198 Project/data/physical_activity.xlsx")
+physical_activity <- read_excel(here("data/physical_activity.xlsx"))
 ```
 
 ```{r upload-heart-disease-data, echo= FALSE, message= FALSE, warning= FALSE}
-heart_disease <- read_excel("~/ Stats 198 Project/data/heart_disease.xlsx")
+heart_disease <- read_excel(here("data/heart_disease.xlsx"))
 ```
 
 ```{r upload-diabetes-data, echo= FALSE, message=FALSE, warning= FALSE}
-diabetes <- read_excel("~/ Stats 198 Project/data/diabetes.xlsx")
+diabetes <- read_excel(here("data/diabetes.xlsx"))
 ```
 
 ```{r upload-kidney-disease-data, echo= FALSE, message= FALSE, warning= FALSE}
-kidney_disease <- read_excel("~/ Stats 198 Project/data/kidney_disease.xlsx")
+kidney_disease <- read_excel(here("data/kidney_disease.xlsx"))
 ```
 
 ```{r edit-insurance-data, echo= FALSE, message= FALSE, warning= FALSE}
