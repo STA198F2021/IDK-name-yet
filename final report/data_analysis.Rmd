@@ -217,6 +217,25 @@ tidy(access_smoking_fit) %>%
   print()
 ```
 
+```{r adjusted-r-squared-access-smoking_no_int, warning= FALSE, message= FALSE}
+glance(access_smoking_fit)$adj.r.squared %>%
+  print()
+```
+
+```{r residuals-access-smoking_no_int, warning = FALSE, message= FALSE}
+access_smoking_fit_aug %>%
+  ggplot(mapping = aes(x = .fitted, y = .std.resid)) + 
+  geom_point() + 
+  geom_hline(yintercept = 0, color = "purple", lty = "dashed") + 
+  labs(
+    title = "Residuals vs. Predicted City Percentage of Smoking Adults",
+    subtitle = "Data From CDC 500 Cities",
+    x = "Predicted Percentage of Smokers",
+    y = "Standard Residuals"
+  )
+```
+
+
 ### Fit with Interaction Variables
 
 #### 1) Access Variables vs. Smoking
