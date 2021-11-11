@@ -201,17 +201,65 @@ data_500_cities <- edit_insurance %>%
 
 # Linear Regressions
 
-NOTE: Create regressions first between the explanatory (access) variables-- this can indicate what kind of interactions are needed.
+New Method:
 
---> insurance vs. visits to doctor
---> insurance vs. medicine
---> visits to doctor vs. medicine
+a) Run correlations between the explanatory variables
+b) Run linear regressions and adjusted r squared values
+c) Assess which regression is better
+d) Run the residual plot and the graph
 
-NOTE: We will not do third order interactions because they are beyond the scope of this course
+## Correlations between Explanatory Variables
 
-## Regressions for Healthcare Access and Behaviors Variables
+```{r correlation-insurance-doctor, warning= FALSE, message= FALSE}
+data_500_cities %>%
+  ggplot(mapping = aes(x = insurance, y = visits_to_doctor)) +
+  geom_point() +
+  labs(
+    title = "Relationship Between Lack of Insurance and Visits to Doctor",
+    subtitle = "Data from CDC 500 Cities",
+    x = "Percent Lack of Insurance",
+    y = "Percent Visiting Doctor within 6 months"
+  )
+```
 
-### Fit without Interaction Variables
+There does not seem to be any significant correlation.
+
+```{r correlation-insurance-bp-meds, warning= FALSE, message= FALSE}
+data_500_cities %>%
+  ggplot(mapping = aes(x = insurance, y = medicine_high_bp)) +
+  geom_point() +
+  labs(
+    title = "Relationship Between Lack of Insurance and Percent Pop Taking BP Meds",
+    subtitle = "Data from CDC 500 Cities",
+    x = "Percent Lack of Insurance",
+    y = "Percent Taking Medications for High Blood Pressure"
+  )
+```
+
+There does not seem to be any significant correlation.
+
+```{r correlation-visits-to-doctor-bp-meds, warning= FALSE, message= FALSE}
+data_500_cities %>%
+  ggplot(mapping = aes(x = visits_to_doctor, y = medicine_high_bp)) +
+  geom_point() +
+  labs(
+    title = "Relationship Between Visits to Doctor and Percent Pop Taking BP Meds",
+    subtitle = "Data from CDC 500 Cities",
+    x = "Percent Visits to Doctor within the Past 6 Months",
+    y = "Percent Taking Medications for High Blood Pressure"
+  )
+```
+
+There seems to be a significant correlation between Visits to Doctor and Taking Medications.
+
+As a result, I will test three models: one with no interaction variables, one with only one interaction variable (Visits_to_Doctor * medicine_high_bp), and one with all three interaction variables.
+
+## Access Variables vs. Smoking
+
+### Running Linear Regressions
+
+Linear Regression with No Interaction Variables:
+
 ```{r linear-regression-access-smoking_no_int, warning= FALSE, message= FALSE}
 access_smoking_fit <- linear_reg() %>%
   set_engine("lm") %>%
@@ -221,10 +269,55 @@ tidy(access_smoking_fit) %>%
   print()
 ```
 
+Linear Regression with one interaction variable:
+
+```{r linear-regression-access-smoking_one_int, warning= FALSE, message= FALSE}
+one_access_smoking_fit <- linear_reg() %>%
+  set_engine("lm") %>%
+  fit(smoking ~ insurance + visits_to_doctor + medicine_high_bp + (visits_to_doctor * medicine_high_bp), data = data_500_cities)
+one_access_smoking_fit_aug <- augment(one_access_smoking_fit$fit)
+tidy(one_access_smoking_fit) %>%
+  print()
+```
+
+Linear Regression with All Interaction Variables
+```{r linear-regression-access-smoking-int, warning= FALSE, message= FALSE}
+int_access_smoking_fit <- linear_reg() %>%
+  set_engine("lm") %>%
+  fit(smoking ~ insurance + visits_to_doctor + medicine_high_bp + (insurance * visits_to_doctor) + (insurance * medicine_high_bp) + (visits_to_doctor * medicine_high_bp), data = data_500_cities)
+int_access_smoking_fit_aug <- augment(int_access_smoking_fit$fit)
+tidy(int_access_smoking_fit) %>%
+  print()
+```
+
+### Comparing Adj R-Squared Values
+
+Adj R-Squared Value with No Interactions: 
+
 ```{r adjusted-r-squared-access-smoking_no_int, warning= FALSE, message= FALSE}
 glance(access_smoking_fit)$adj.r.squared %>%
   print()
 ```
+
+Adj R-Squared Value with One Interactions:
+
+```{r adjusted-r-squared-access-smoking_one_int, warning= FALSE, message= FALSE}
+glance(one_access_smoking_fit)$adj.r.squared %>%
+  print()
+```
+
+Adj R-Squared Value with All Interactions:
+
+```{r adjusted-r-squared-access-smoking-all-int, warning= FALSE, message= FALSE}
+glance(int_access_smoking_fit)$adj.r.squared %>%
+  print()
+```
+
+Make some kind of statement here about which regression is most appropriate
+
+### Displaying Graphs (Edit Based on Which Interaction is Most Appropriate)
+
+Residual Graph (Note any patterns)
 
 ```{r residuals-access-smoking_no_int, warning = FALSE, message= FALSE}
 access_smoking_fit_aug %>%
@@ -239,6 +332,8 @@ access_smoking_fit_aug %>%
   )
 ```
 
+Graph Between Explanatory and Response Variables
+
 ```{r graph-regression-access-smoking-no-int, warning= FALSE, message= FALSE}
 data_500_cities %>%
 ggplot( mapping = aes(x = insurance, y = smoking)) + 
@@ -246,7 +341,11 @@ geom_point(size = 0.25) +
 geom_smooth(method = "lm", data = access_smoking_fit_aug, mapping = aes(x = insurance, y = .fitted))
 ```
 
-#### 2) Access Variables vs. Binge Drinking
+## Access Variables vs. Binge Drinking
+
+### Running Linear Regressions
+
+Linear Regression for  no interactions:
 
 ```{r linear-regression-access-binge-drinking-no-int, warning= FALSE, message= FALSE}
 access_binge_drinking_fit <- linear_reg() %>%
@@ -257,10 +356,57 @@ tidy(access_binge_drinking_fit) %>%
   print()
 ```
 
+Linear regression with one interaction:
+
+```{r linear-regression-access-binge-drinking-one-int, warning= FALSE, message= FALSE}
+one_access_binge_drinking_fit <- linear_reg() %>%
+  set_engine("lm") %>%
+  fit(binge_drinking ~ insurance + visits_to_doctor + medicine_high_bp + (visits_to_doctor * medicine_high_bp), data = data_500_cities)
+one_access_binge_drinking_fit_aug <- augment(one_access_binge_drinking_fit$fit)
+tidy(one_access_binge_drinking_fit) %>%
+  print()
+```
+
+Linear regression with all interactions: 
+
+```{r linear-regression-access-binge-drinking-int, warning= FALSE, message= FALSE}
+int_access_binge_drinking_fit <- linear_reg() %>%
+  set_engine("lm") %>%
+  fit(binge_drinking ~ insurance + visits_to_doctor + medicine_high_bp + (insurance * visits_to_doctor) + (insurance * medicine_high_bp) + (visits_to_doctor * medicine_high_bp), data = data_500_cities)
+int_access_binge_drinking_fit_aug <- augment(int_access_binge_drinking_fit$fit)
+tidy(int_access_binge_drinking_fit) %>%
+  print()
+```
+
+
+### Comparing Adj R-Squared Values
+
+Adj R-squared value for regression with no interactions:
+
 ```{r adjusted-r-squared-access-binge-drinking-no-int, warning= FALSE, message= FALSE}
 glance(access_binge_drinking_fit)$adj.r.squared %>%
   print()
 ```
+
+Adj R-squared value for regression with one interaction:
+
+```{r adjusted-r-squared-access-binge-drinking-one-int, warning= FALSE, message= FALSE}
+glance(one_access_binge_drinking_fit)$adj.r.squared %>%
+  print()
+```
+
+Adj R-squared value for regression with all interactions:
+
+```{r adjusted-r-squared-access-binge-drinking-all-int, warning= FALSE, message= FALSE}
+glance(int_access_binge_drinking_fit)$adj.r.squared %>%
+  print()
+```
+
+Make some kind of statement about which linear regression is most apporpriate
+
+### Displaying Graphs (Edit Based on which regression you choose)
+
+Residual Graph (Note any patterns)
 
 ```{r residuals-access-binge-drinking-no-int, warning = FALSE, message= FALSE}
 access_binge_drinking_fit_aug %>%
@@ -275,6 +421,8 @@ access_binge_drinking_fit_aug %>%
   )
 ```
 
+Graph Comparing Explanatory and Response Variables
+
 ```{r graph-regression-access-binge-drinking-no-int, warning= FALSE, message= FALSE}
 data_500_cities %>%
 ggplot( mapping = aes(x = insurance, y = binge_drinking)) + 
@@ -282,9 +430,13 @@ geom_point(size = 0.25) +
 geom_smooth(data = access_binge_drinking_fit_aug, mapping = aes(x = insurance, y = .fitted))
 ```
 
-#### 3) Access Variables vs. Physical Activity
+## Access Variables vs. Physical Activity
 
-```{r linear-regression-access-physical-activity-no int, warning= FALSE, message= FALSE}
+### Running Linear Regressions
+
+Linear regression with no interactions
+
+```{r linear-regression-access-physical-activity-no-int, warning= FALSE, message= FALSE}
 access_physical_activity_fit <- linear_reg() %>%
   set_engine("lm") %>%
   fit(physical_activity ~ insurance + visits_to_doctor + medicine_high_bp, data = data_500_cities)
@@ -293,10 +445,56 @@ tidy(access_physical_activity_fit) %>%
   print()
 ```
 
+Linear regression with one interaction
+
+```{r linear-regression-access-physical-activity-one-int, warning= FALSE, message= FALSE}
+one_access_physical_activity_fit <- linear_reg() %>%
+  set_engine("lm") %>%
+  fit(physical_activity ~ insurance + visits_to_doctor + medicine_high_bp + (visits_to_doctor * medicine_high_bp), data = data_500_cities)
+one_access_physical_activity_fit_aug <- augment(one_access_physical_activity_fit$fit)
+tidy(one_access_physical_activity_fit) %>%
+  print()
+```
+
+Linear regression with all interactions
+
+```{r linear-regression-access-physical-activity-all-int, warning= FALSE, message= FALSE}
+int_access_physical_activity_fit <- linear_reg() %>%
+  set_engine("lm") %>%
+  fit(physical_activity ~ insurance + visits_to_doctor + medicine_high_bp + (insurance * visits_to_doctor) + (insurance * medicine_high_bp) + (visits_to_doctor * medicine_high_bp), data = data_500_cities)
+int_access_physical_activity_fit_aug <- augment(int_access_physical_activity_fit$fit)
+tidy(int_access_physical_activity_fit) %>%
+  print()
+```
+
+### Comparing Adj R-Squared Values
+
+Adj R-squared value for regression with no interactions
+
 ```{r adjusted-r-squared-access-physical-activity-no-int, warning= FALSE, message= FALSE}
 glance(access_physical_activity_fit)$adj.r.squared %>%
   print()
 ```
+
+Adj R-squared value for regression with one interaction
+
+```{r adjusted-r-squared-access-physical-activity-one-int, warning= FALSE, message= FALSE}
+glance(one_access_physical_activity_fit)$adj.r.squared %>%
+  print()
+```
+
+Adj R-squared value for regression with all interactions
+
+```{r adjusted-r-squared-access-physical-activity-all-int, warning= FALSE, message= FALSE}
+glance(int_access_physical_activity_fit)$adj.r.squared %>%
+  print()
+```
+
+Make some kind of statement about which regression is most appropriate
+
+### Displaying Graphs (Edit based on which regression you choose)
+
+Residual Graph (Note any patterns)
 
 ```{r residuals-access-physical-activity-no-int, warning = FALSE, message= FALSE}
 access_physical_activity_fit_aug %>%
@@ -311,6 +509,8 @@ access_physical_activity_fit_aug %>%
   )
 ```
 
+Graph Comparing Explanatory and Response Variables
+
 ```{r graph-regression-access-physical-activity-no-int, warning= FALSE, message= FALSE}
 data_500_cities %>%
 ggplot( mapping = aes(x = insurance, y = physical_activity)) + 
@@ -318,109 +518,11 @@ geom_point(size = 0.25) +
 geom_smooth(method = "lm", data = access_physical_activity_fit_aug, mapping = aes(x = insurance, y = .fitted))
 ```
 
-### Fit with Interaction Variables
+## Access Variables vs. Coronary Heart Disease
 
-#### 1) Access Variables vs. Smoking
+### Running Linear Regressions
 
-```{r linear-regression-access-smoking, warning= FALSE, message= FALSE}
-int_access_smoking_fit <- linear_reg() %>%
-  set_engine("lm") %>%
-  fit(smoking ~ insurance + visits_to_doctor + medicine_high_bp + (insurance * visits_to_doctor) + (insurance * medicine_high_bp) + (visits_to_doctor * medicine_high_bp), data = data_500_cities)
-int_access_smoking_fit_aug <- augment(int_access_smoking_fit$fit)
-tidy(int_access_smoking_fit) %>%
-  print()
-```
-
-```{r adjusted-r-squared-access-smoking, warning= FALSE, message= FALSE}
-glance(int_access_smoking_fit)$adj.r.squared %>%
-  print()
-```
-
-```{r residuals-access-smoking, warning = FALSE, message= FALSE}
-int_access_smoking_fit_aug %>%
-  ggplot(mapping = aes(x = .fitted, y = .std.resid)) + 
-  geom_point() + 
-  geom_hline(yintercept = 0, color = "purple", lty = "dashed") + 
-  labs(
-    title = "Residuals vs. Predicted City Percentage of Smoking Adults",
-    subtitle = "Data From CDC 500 Cities",
-    x = "Predicted Percentage of Smokers",
-    y = "Standard Residuals"
-  )
-```
-
-```{r graph-regression-access-smoking, warning= FALSE, message= FALSE}
-data_500_cities %>%
-ggplot( mapping = aes(x = insurance, y = smoking)) + 
-geom_point(size = 0.25) +
-geom_smooth(method = "lm", data = int_access_smoking_fit_aug, mapping = aes(x = insurance, y = .fitted))
-```
-
-#### 2) Access Variables vs. Binge Drinking
-
-```{r linear-regression-access-binge-drinking, warning= FALSE, message= FALSE}
-int_access_binge_drinking_fit <- linear_reg() %>%
-  set_engine("lm") %>%
-  fit(binge_drinking ~ insurance + visits_to_doctor + medicine_high_bp + (insurance * visits_to_doctor) + (insurance * medicine_high_bp) + (visits_to_doctor * medicine_high_bp), data = data_500_cities)
-int_access_binge_drinking_fit_aug <- augment(int_access_binge_drinking_fit$fit)
-tidy(int_access_binge_drinking_fit) %>%
-  print()
-```
-
-```{r adjusted-r-squared-access-binge-drinking, warning= FALSE, message= FALSE}
-glance(int_access_binge_drinking_fit)$adj.r.squared %>%
-  print()
-```
-
-```{r residuals-access-binge-drinking, warning = FALSE, message= FALSE}
-int_access_binge_drinking_fit_aug %>%
-  ggplot(mapping = aes(x = .fitted, y = .std.resid)) + 
-  geom_point() + 
-  geom_hline(yintercept = 0, color = "purple", lty = "dashed") + 
-  labs(
-    title = "Residuals vs. Predicted Percentage of City Reporting Binge Drinking",
-    subtitle = "Data From CDC 500 Cities",
-    x = "Predicted Percentage of Adults Reporting Binge Drinking",
-    y = "Standard Residuals"
-  )
-```
-
-Why is this graph not working? Ask at some point
-
-#### 3) Access Variables vs. Physical Activity
-
-```{r linear-regression-access-physical-activity, warning= FALSE, message= FALSE}
-int_access_physical_activity_fit <- linear_reg() %>%
-  set_engine("lm") %>%
-  fit(physical_activity ~ insurance + visits_to_doctor + medicine_high_bp + (insurance * visits_to_doctor) + (insurance * medicine_high_bp) + (visits_to_doctor * medicine_high_bp), data = data_500_cities)
-int_access_physical_activity_fit_aug <- augment(int_access_physical_activity_fit$fit)
-tidy(int_access_physical_activity_fit) %>%
-  print()
-```
-
-```{r adjusted-r-squared-access-physical-activity, warning= FALSE, message= FALSE}
-glance(int_access_physical_activity_fit)$adj.r.squared %>%
-  print()
-```
-
-```{r residuals-access-physical-activity, warning = FALSE, message= FALSE}
-int_access_physical_activity_fit_aug %>%
-  ggplot(mapping = aes(x = .fitted, y = .std.resid)) + 
-  geom_point() + 
-  geom_hline(yintercept = 0, color = "purple", lty = "dashed") + 
-  labs(
-    title = "Residuals vs. Predicted Percentage of City Reporting No Physical Activity",
-    subtitle = "Data From CDC 500 Cities",
-    x = "Predicted Percentage Reporting No Lesisure Time Physical Activity",
-    y = "Standard Residuals"
-  )
-```
-
-## Regressions for Healthcare Access and Health Outcomes
-
-###Fit without Interaction Variables
-
-#### 4) Access Variables vs. Heart Disease
+Linear regression with no interactions:
 
 ```{r linear-regression-access-heart-disease-no-int, warning= FALSE, message= FALSE}
 access_heart_disease_fit <- linear_reg() %>%
@@ -431,10 +533,54 @@ tidy(access_heart_disease_fit) %>%
   print()
 ```
 
+Linear regression with one interaction
+
+```{r linear-regression-access-heart-disease-one-int, warning= FALSE, message= FALSE}
+one_access_heart_disease_fit <- linear_reg() %>%
+  set_engine("lm") %>%
+  fit(heart_disease ~ insurance + visits_to_doctor + medicine_high_bp + (visits_to_doctor * medicine_high_bp), data = data_500_cities)
+access_heart_disease_fit_aug <- augment(access_heart_disease_fit$fit)
+tidy(access_heart_disease_fit) %>%
+  print()
+```
+
+Linear regression with all interactions
+
+```{r linear-regression-access-heart-disease-int, warning= FALSE, message= FALSE}
+int_access_heart_disease_fit <- linear_reg() %>%
+  set_engine("lm") %>%
+  fit(heart_disease ~ insurance + visits_to_doctor + medicine_high_bp + (insurance * visits_to_doctor) + (insurance * medicine_high_bp) + (visits_to_doctor * medicine_high_bp), data = data_500_cities)
+int_access_heart_disease_fit_aug <- augment(int_access_heart_disease_fit$fit)
+tidy(int_access_heart_disease_fit) %>%
+  print()
+```
+
+### Comparing Adj R Squared Values
+
+Adj R-squared values for regression with no interactions
+
 ```{r adjusted-r-squared-access-heart-disease-no-int, warning= FALSE, message= FALSE}
 glance(access_heart_disease_fit)$adj.r.squared %>%
   print()
 ```
+
+Adj R-squared values for regression with one interaction
+
+```{r adjusted-r-squared-access-heart-disease-one-int, warning= FALSE, message= FALSE}
+glance(one_access_heart_disease_fit)$adj.r.squared %>%
+  print()
+```
+
+Adj R-squared values for regression with all interactions
+
+```{r adjusted-r-squared-access-heart-disease-int, warning= FALSE, message= FALSE}
+glance(int_access_heart_disease_fit)$adj.r.squared %>%
+  print()
+```
+
+### Displaying Graphs (Edit based on which regression you choose)
+
+Residual Graphs (Note any Patterns)
 
 ```{r residuals-access-heart-disease-no-int, warning = FALSE, message= FALSE}
 access_heart_disease_fit_aug %>%
@@ -449,9 +595,13 @@ access_heart_disease_fit_aug %>%
   )
 ```
 
-NOTE: A linear regression is not fitting for this relationship because there is a significant pattern in the residual plot.
+Graph Comparing Explanatory and Response Variables
 
-#### 5) Access Variables vs. Diabetes
+## Access Variables vs. Diabetes
+
+### Running linear regressions
+
+Linear regression with one interaction
 
 ```{r linear-regression-access-diabetes-no-int, warning= FALSE, message= FALSE}
 access_diabetes_fit <- linear_reg() %>%
@@ -462,11 +612,54 @@ tidy(access_diabetes_fit) %>%
   print()
 ```
 
+Linear regression with one interaction
+
+```{r linear-regression-access-diabetes-one-int, warning= FALSE, message= FALSE}
+one_access_diabetes_fit <- linear_reg() %>%
+  set_engine("lm") %>%
+  fit(diabetes ~ insurance + visits_to_doctor + medicine_high_bp + (visits_to_doctor * medicine_high_bp), data = data_500_cities)
+access_diabetes_fit_aug <- augment(access_diabetes_fit$fit)
+tidy(access_diabetes_fit) %>%
+  print()
+```
+
+Linear regression with all interactions
+
+```{r linear-regression-access-diabetes-int, warning= FALSE, message= FALSE}
+int_access_diabetes_fit <- linear_reg() %>%
+  set_engine("lm") %>%
+  fit(diabetes ~ insurance + visits_to_doctor + medicine_high_bp + (insurance * visits_to_doctor) + (insurance * medicine_high_bp) + (visits_to_doctor * medicine_high_bp), data = data_500_cities)
+int_access_diabetes_fit_aug <- augment(int_access_diabetes_fit$fit)
+tidy(int_access_diabetes_fit) %>%
+  print()
+```
+
+### Comparing Adj R-Squared Values
+
+Adj R-squared value for regression with no interactions
+
 ```{r adjusted-r-squared-access-diabetes-no-int, warning= FALSE, message= FALSE}
 glance(access_diabetes_fit)$adj.r.squared %>%
   print()
 ```
 
+Adj R-squared value for regression with one interaction
+
+```{r adjusted-r-squared-access-diabetes-one-int, warning= FALSE, message= FALSE}
+glance(one_access_diabetes_fit)$adj.r.squared %>%
+  print()
+```
+
+Adj R-squared value for regression with all interactions
+
+```{r adjusted-r-squared-access-diabetes-int, warning= FALSE, message= FALSE}
+glance(int_access_diabetes_fit)$adj.r.squared %>%
+  print()
+```
+
+### Dosplaying Graphs (Edit based on which regression you choose)
+
+Residual Graph (Note any patterns)
 ```{r residuals-access-diabetes-no-int, warning = FALSE, message= FALSE}
 access_diabetes_fit_aug %>%
   ggplot(mapping = aes(x = .fitted, y = .std.resid)) + 
@@ -480,9 +673,13 @@ access_diabetes_fit_aug %>%
   )
 ```
 
-NOTE: A linear regression is not fitting for this relationship because there is a significant pattern in the residual plot.
+Graph comparing explanatory and response variables
 
-#### 6) Access Variables vs. Kidney Disease
+## Access Variables vs. Kidney Disease
+
+### Running Linear Regression Models
+
+Linear Regression Model with no interactions
 
 ```{r linear-regression-access-kidney-disease-no-int, warning= FALSE, message= FALSE}
 access_kidney_disease_fit <- linear_reg() %>%
@@ -493,11 +690,54 @@ tidy(access_kidney_disease_fit) %>%
   print()
 ```
 
+Linear regression model with one interaction
+
+```{r linear-regression-access-kidney-disease-one-int, warning= FALSE, message= FALSE}
+one_access_kidney_disease_fit <- linear_reg() %>%
+  set_engine("lm") %>%
+  fit(kidney_disease ~ insurance + visits_to_doctor + medicine_high_bp + (visits_to_doctor * medicine_high_bp), data = data_500_cities)
+one_access_kidney_disease_fit_aug <- augment(one_access_kidney_disease_fit$fit)
+tidy(one_access_kidney_disease_fit) %>%
+  print()
+```
+
+Linear regression model with all interactions
+
+```{r linear-regression-access-kidney-disease-int, warning= FALSE, message= FALSE}
+int_access_kidney_disease_fit <- linear_reg() %>%
+  set_engine("lm") %>%
+  fit(kidney_disease ~ insurance + visits_to_doctor + medicine_high_bp + (insurance * visits_to_doctor) + (insurance * medicine_high_bp) + (visits_to_doctor * medicine_high_bp), data = data_500_cities)
+int_access_kidney_disease_fit_aug <- augment(int_access_kidney_disease_fit$fit)
+tidy(int_access_kidney_disease_fit) %>%
+  print()
+```
+ 
+### Comparing Adj R-Squared Values
+
+Adj R-squared value for regression with no interactions
+
 ```{r adjusted-r-squared-access-kidney-disease-no-int, warning= FALSE, message= FALSE}
 glance(access_kidney_disease_fit)$adj.r.squared %>%
   print()
 ```
 
+Adj R-squared value for regression with one interaction
+
+```{r adjusted-r-squared-access-kidney-disease-one-int, warning= FALSE, message= FALSE}
+glance(one_access_kidney_disease_fit)$adj.r.squared %>%
+  print()
+```
+
+Adj R-squared value for regression with all interactions
+
+```{r adjusted-r-squared-access-kidney-disease-int, warning= FALSE, message= FALSE}
+glance(int_access_kidney_disease_fit)$adj.r.squared %>%
+  print()
+```
+
+Displaying Graphs:
+
+Residual Graph (Note any patterns)
 ```{r residuals-access-kidney-disease-no-int, warning = FALSE, message= FALSE}
 access_kidney_disease_fit_aug %>%
   ggplot(mapping = aes(x = .fitted, y = .std.resid)) + 
@@ -511,102 +751,7 @@ access_kidney_disease_fit_aug %>%
   )
 ```
 
-NOTE: A linear regression is not fitting for this relationship because there is a significant pattern in the residual plot.
-
-### Fit with Interaction Variables
-
-#### 4) Access Variables vs. Heart Disease
-
-```{r linear-regression-access-heart-disease, warning= FALSE, message= FALSE}
-int_access_heart_disease_fit <- linear_reg() %>%
-  set_engine("lm") %>%
-  fit(heart_disease ~ insurance + visits_to_doctor + medicine_high_bp + (insurance * visits_to_doctor) + (insurance * medicine_high_bp) + (visits_to_doctor * medicine_high_bp), data = data_500_cities)
-int_access_heart_disease_fit_aug <- augment(int_access_heart_disease_fit$fit)
-tidy(int_access_heart_disease_fit) %>%
-  print()
-```
-
-```{r adjusted-r-squared-access-heart-disease, warning= FALSE, message= FALSE}
-glance(int_access_heart_disease_fit)$adj.r.squared %>%
-  print()
-```
-
-```{r residuals-access-heart-disease, warning = FALSE, message= FALSE}
-int_access_heart_disease_fit_aug %>%
-  ggplot(mapping = aes(x = .fitted, y = .std.resid)) + 
-  geom_point() + 
-  geom_hline(yintercept = 0, color = "purple", lty = "dashed") + 
-  labs(
-    title = "Residuals vs. Predicted City Percentage of Adults with Coronary Heart Disease",
-    subtitle = "Data From CDC 500 Cities",
-    x = "Predicted Percentage of Adults with Coronary Heart Disease",
-    y = "Standard Residuals"
-  )
-```
-
-NOTE: A linear regression is not fitting for this relationship because there is a significant pattern in the residual plot.
-
-#### 5) Access Variables vs. Diabetes
-
-```{r linear-regression-access-diabetes, warning= FALSE, message= FALSE}
-int_access_diabetes_fit <- linear_reg() %>%
-  set_engine("lm") %>%
-  fit(diabetes ~ insurance + visits_to_doctor + medicine_high_bp + (insurance * visits_to_doctor) + (insurance * medicine_high_bp) + (visits_to_doctor * medicine_high_bp), data = data_500_cities)
-int_access_diabetes_fit_aug <- augment(int_access_diabetes_fit$fit)
-tidy(int_access_diabetes_fit) %>%
-  print()
-```
-
-```{r adjusted-r-squared-access-diabetes, warning= FALSE, message= FALSE}
-glance(int_access_diabetes_fit)$adj.r.squared %>%
-  print()
-```
-
-```{r residuals-access-diabetes, warning = FALSE, message= FALSE}
-int_access_diabetes_fit_aug %>%
-  ggplot(mapping = aes(x = .fitted, y = .std.resid)) + 
-  geom_point() + 
-  geom_hline(yintercept = 0, color = "purple", lty = "dashed") + 
-  labs(
-    title = "Residuals vs. Predicted City Percentage of Adults with Diabetes",
-    subtitle = "Data From CDC 500 Cities",
-    x = "Predicted Percentage of Adults with Diabetes",
-    y = "Standard Residuals"
-  )
-```
-
-#### 6) Access Variables vs. Kidney Disease
-
-```{r linear-regression-access-kidney-disease, warning= FALSE, message= FALSE}
-int_access_kidney_disease_fit <- linear_reg() %>%
-  set_engine("lm") %>%
-  fit(kidney_disease ~ insurance + visits_to_doctor + medicine_high_bp + (insurance * visits_to_doctor) + (insurance * medicine_high_bp) + (visits_to_doctor * medicine_high_bp), data = data_500_cities)
-int_access_kidney_disease_fit_aug <- augment(int_access_kidney_disease_fit$fit)
-tidy(int_access_kidney_disease_fit) %>%
-  print()
-```
-
-```{r adjusted-r-squared-access-kidney-disease, warning= FALSE, message= FALSE}
-glance(int_access_kidney_disease_fit)$adj.r.squared %>%
-  print()
-```
-
-```{r residuals-access-kidney-disease, warning = FALSE, message= FALSE}
-int_access_kidney_disease_fit_aug %>%
-  ggplot(mapping = aes(x = .fitted, y = .std.resid)) + 
-  geom_point() + 
-  geom_hline(yintercept = 0, color = "purple", lty = "dashed") + 
-  labs(
-    title = "Residuals vs. Predicted City Percentage of Adults with Kidney Disease",
-    subtitle = "Data From CDC 500 Cities",
-    x = "Predicted Percentage of Adults with Diabetes",
-    y = "Standard Residuals"
-  )
-```
-
-NOTE: A linear regression is not fitting for this relationship because there is a significant pattern in the residual plot.
-
-## Regression With Most Correlated Variables
+Graph Comparing Explanatory and Response Variables
 
 # ANOVA Testing
 
