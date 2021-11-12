@@ -960,3 +960,51 @@ ggplot(test2, aes(x = long, y = lat, group = group, fill = test)) +
        y = "Latitude",
        title = "Physical Activity across States")
 ```
+
+### Health Outcome: Diabetes
+```{r map-vis-diabetes}
+states %>%
+  left_join(data_500_cities, by = "StateDesc") -> test
+data_500_cities %>%
+  group_by(StateDesc) %>%
+  summarise(test = mean(diabetes)) %>%
+  right_join(states, by = "StateDesc") -> test2
+
+ggplot(test2, aes(x = long, y = lat, group = group, fill = test)) + 
+  geom_polygon(color = "white")+
+    labs(x = "Longitude",
+       y = "Latitude",
+       title = "Diabetes across States")
+```
+
+### Health Outcome: Heart Disease
+```{r map-vis-heart-disease}
+states %>%
+  left_join(data_500_cities, by = "StateDesc") -> test
+data_500_cities %>%
+  group_by(StateDesc) %>%
+  summarise(test = mean(heart_disease)) %>%
+  right_join(states, by = "StateDesc") -> test2
+
+ggplot(test2, aes(x = long, y = lat, group = group, fill = test)) + 
+  geom_polygon(color = "white")+
+    labs(x = "Longitude",
+       y = "Latitude",
+       title = "Heart Disease across States")
+```
+
+### Health Outcome: Kidney Disease
+```{r map-vis-kidney-disease}
+states %>%
+  left_join(data_500_cities, by = "StateDesc") -> test
+data_500_cities %>%
+  group_by(StateDesc) %>%
+  summarise(test = mean(kidney_disease)) %>%
+  right_join(states, by = "StateDesc") -> test2
+
+ggplot(test2, aes(x = long, y = lat, group = group, fill = test)) + 
+  geom_polygon(color = "white")+
+    labs(x = "Longitude",
+       y = "Latitude",
+       title = "Kidney Disease across States")
+```
