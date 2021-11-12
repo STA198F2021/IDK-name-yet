@@ -860,6 +860,57 @@ states %>%
   mutate(StateDesc = str_to_title(region)) -> states
 ```
 
+### Access Variable: Health Insurance
+
+```{r map-vis-insurance}
+states %>%
+  left_join(data_500_cities, by = "StateDesc") -> test
+data_500_cities %>%
+  group_by(StateDesc) %>%
+  summarise(test = mean(insurance)) %>%
+  right_join(states, by = "StateDesc") -> test2
+
+ggplot(test2, aes(x = long, y = lat, group = group, fill = test)) + 
+  geom_polygon(color = "white")+
+    labs(x = "Longitude",
+       y = "Latitude",
+       title = "Health Insurance across States")
+```
+
+### Access Variables: High Blood Pressure Medicine
+
+```{r map-vis-medicine}
+states %>%
+  left_join(data_500_cities, by = "StateDesc") -> test
+data_500_cities %>%
+  group_by(StateDesc) %>%
+  summarise(test = mean(medicine_high_bp)) %>%
+  right_join(states, by = "StateDesc") -> test2
+
+ggplot(test2, aes(x = long, y = lat, group = group, fill = test)) + 
+  geom_polygon(color = "white")+
+    labs(x = "Longitude",
+       y = "Latitude",
+       title = "High Blood Pressure Medicine across States")
+```
+
+### Access Variable: Visits to Doctor
+
+```{r map-vis-doctor-visits}
+states %>%
+  left_join(data_500_cities, by = "StateDesc") -> test
+data_500_cities %>%
+  group_by(StateDesc) %>%
+  summarise(test = mean(visits_to_doctor)) %>%
+  right_join(states, by = "StateDesc") -> test2
+
+ggplot(test2, aes(x = long, y = lat, group = group, fill = test)) + 
+  geom_polygon(color = "white")+
+    labs(x = "Longitude",
+       y = "Latitude",
+       title = "Visits to Doctor across States")
+```
+
 ### Behaviour: Binge Drinking 
 
 ```{r map-vis-binge-drinking}
