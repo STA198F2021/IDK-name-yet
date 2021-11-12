@@ -30,6 +30,7 @@ library(sf)
 library(rnaturalearth)
 library(rnaturalearthdata)
 library(rgeos)
+
 ```
 
 ```{r upload-insurance-data, echo= FALSE, message= FALSE, warning= FALSE}
@@ -254,11 +255,13 @@ There seems to be a significant correlation between Visits to Doctor and Taking 
 
 As a result, I will test three models: one with no interaction variables, one with only one interaction variable (Visits_to_Doctor * medicine_high_bp), and one with all three interaction variables.
 
-## Access Variables vs. Smoking
-
 ### Running Linear Regressions
 
 Linear Regression with No Interaction Variables:
+
+### Fit without Interaction Variables
+
+#### 1) Access Variables vs. Smoking
 
 ```{r linear-regression-access-smoking_no_int, warning= FALSE, message= FALSE}
 access_smoking_fit <- linear_reg() %>%
@@ -427,7 +430,7 @@ Graph Comparing Explanatory and Response Variables
 data_500_cities %>%
 ggplot( mapping = aes(x = insurance, y = binge_drinking)) + 
 geom_point(size = 0.25) +
-geom_smooth(data = access_binge_drinking_fit_aug, mapping = aes(x = insurance, y = .fitted))
+geom_smooth(method = "lm", data = access_binge_drinking_fit_aug, mapping = aes(x = insurance, y = .fitted))
 ```
 
 ## Access Variables vs. Physical Activity
@@ -824,8 +827,7 @@ The overall ANOVA test says there is a significance but the Step Down stests sho
 ```{r step-down-doctor-state, warning= FALSE, message= FALSE}
 doctor_state_pair <- pairwise.t.test(data_500_cities$visits_to_doctor,    data_500_cities$StateDesc, p.adj = "holm")
 sig_doctor_state_pairs <- broom::tidy(doctor_state_pair) %>%
-  filter(p.value<0.05) %>%
-  arrange(group1,group2)
+  filter(p.value<0.05)
 nrow(sig_doctor_state_pairs)
 print(sig_doctor_state_pairs)
 ```
@@ -833,7 +835,8 @@ print(sig_doctor_state_pairs)
 Ok so there is clearly an issue. I think I am interpreting the F-statistic incorrectly?
 
 ```{r step-down-smoking-state, warning= FALSE, message= FALSE}
-smoking_state_pair <- pairwise.t.test(data_500_cities$smoking,    data_500_cities$StateDesc, p.adj = "holm")
+smoking_state_pair <- pairwise.t.test(data_500_cities$smoking,    data_500_cities$StateDesc)
+
 sig_smoking_state_pairs <- broom::tidy(smoking_state_pair) %>%
   filter(p.value<0.05) %>%
   arrange(group1,group2)
@@ -841,4 +844,68 @@ nrow(sig_smoking_state_pairs)
 print(sig_smoking_state_pairs)
 ```
 
+
+
 ### Map Visualization
+```{r map-vis}
+theme_set(theme_bw())
+world <- ne_countries(scale = "medium", returnclass = "sf")
+names(world)
+state.name
+
+head(world)
+
+states <- map_data("state")
+states %>%
+  mutate(StateDesc = str_to_title(region)) -> states
+```
+
+### Behaviour: Binge Drinking 
+
+```{r map-vis-binge-drinking}
+states %>%
+  left_join(data_500_cities, by = "StateDesc") -> test
+data_500_cities %>%
+  group_by(StateDesc) %>%
+  summarise(test = mean(binge_drinking)) %>%
+  right_join(states, by = "StateDesc") -> test2
+
+ggplot(test2, aes(x = long, y = lat, group = group, fill = test)) + 
+  geom_polygon(color = "white")+
+    labs(x = "Longitude",
+       y = "Latitude",
+       title = "Binge Drinking across States")
+```
+
+### Behaviour: Smoking
+
+```{r map-vis-smoking}
+states %>%
+  left_join(data_500_cities, by = "StateDesc") -> test
+data_500_cities %>%
+  group_by(StateDesc) %>%
+  summarise(test = mean(smoking)) %>%
+  right_join(states, by = "StateDesc") -> test2
+
+ggplot(test2, aes(x = long, y = lat, group = group, fill = test)) + 
+  geom_polygon(color = "white")+
+    labs(x = "Longitude",
+       y = "Latitude",
+       title = "Smoking across States")
+```
+
+### Behaviour: Physical Activity
+```{r map-vis-physical-activity}
+states %>%
+  left_join(data_500_cities, by = "StateDesc") -> test
+data_500_cities %>%
+  group_by(StateDesc) %>%
+  summarise(test = mean(physical_activity)) %>%
+  right_join(states, by = "StateDesc") -> test2
+
+ggplot(test2, aes(x = long, y = lat, group = group, fill = test)) + 
+  geom_polygon(color = "white")+
+    labs(x = "Longitude",
+       y = "Latitude",
+       title = "Physical Activity across States")
+```
