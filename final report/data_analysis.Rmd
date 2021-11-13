@@ -814,9 +814,203 @@ Also Considers Visits to Doctor and High BP Meds as Explanatory Variables (See R
 
 There seems to be a significant pattern in the residual plot, so a lienar model would not be appropriate. Try a logistic model?
 
-# ANOVA Testing
+## ANOVA Testing
 
-## Initial Visualizations
+### Map Visualization
+```{r map-vis, warning= FALSE, message= FALSE}
+theme_set(theme_bw())
+world <- ne_countries(scale = "medium", returnclass = "sf")
+names(world)
+state.name
+
+head(world)
+
+states <- map_data("state")
+states %>%
+  mutate(StateDesc = str_to_title(region)) -> states
+```
+
+#### State Map of Health Insurance
+
+```{r map-vis-insurance, warning= FALSE, message= FALSE}
+states %>%
+  left_join(data_500_cities, by = "StateDesc") -> test
+data_500_cities %>%
+  group_by(StateDesc) %>%
+  summarise(test = mean(insurance)) %>%
+  right_join(states, by = "StateDesc") -> test2
+
+ggplot(test2, aes(x = long, y = lat, group = group, fill = test)) + 
+  geom_polygon(color = "white")+
+    labs(x = "Longitude",
+       y = "Latitude",
+       fill = "Percent No 
+Insurance",
+       title = "Mean Percent Lack of Health Insurance across States",
+subtitle = "Data Retreived from CDC 500 Cities")
+```
+
+#### State Map of Visits to Doctor Variable
+
+```{r map-vis-doctor-visits, warning = FALSE, message= FALSE}
+states %>%
+  left_join(data_500_cities, by = "StateDesc") -> test
+data_500_cities %>%
+  group_by(StateDesc) %>%
+  summarise(test = mean(visits_to_doctor)) %>%
+  right_join(states, by = "StateDesc") -> test2
+
+ggplot(test2, aes(x = long, y = lat, group = group, fill = test)) + 
+  geom_polygon(color = "white") +
+    labs(x = "Longitude",
+       y = "Latitude",
+       fill = "Percent 
+Visiting Doctor",
+       title = "Mean Percent of Pop Visiting Doctor across States",
+       subtitle = "Data Retreived from CDC 500 Cities")
+```
+
+#### State Map of High Blood Pressure Medicine Variable
+
+```{r map-vis-medicine, warning= FALSE, message= FALSE}
+states %>%
+  left_join(data_500_cities, by = "StateDesc") -> test
+data_500_cities %>%
+  group_by(StateDesc) %>%
+  summarise(test = mean(medicine_high_bp)) %>%
+  right_join(states, by = "StateDesc") -> test2
+
+ggplot(test2, aes(x = long, y = lat, group = group, fill = test)) + 
+  geom_polygon(color = "white")+
+    labs(x = "Longitude",
+       y = "Latitude",
+       fill = "Percent with 
+High BP Meds",
+       title = "Mean Percent Pop with High BP Medicine across States",
+       subtitle = "Data Retreived from CDC 500 Cities")
+```
+
+#### State Map of Smoking Variable
+
+```{r map-vis-smoking, warning= FALSE, message= FALSE}
+states %>%
+  left_join(data_500_cities, by = "StateDesc") -> test
+data_500_cities %>%
+  group_by(StateDesc) %>%
+  summarise(test = mean(smoking)) %>%
+  right_join(states, by = "StateDesc") -> test2
+
+ggplot(test2, aes(x = long, y = lat, group = group, fill = test)) + 
+  geom_polygon(color = "white")+
+    labs(x = "Longitude",
+       y = "Latitude",
+       fill = "Percent 
+Smoking",
+       title = "Mean Reported Percent Smoking across States",
+       subtitle = "Data Retreived from CDC 500 Cities")
+```
+
+#### State Map of Binge Drinking Variable
+
+```{r map-vis-binge-drinking, warning= FALSE, message= FALSE}
+states %>%
+  left_join(data_500_cities, by = "StateDesc") -> test
+data_500_cities %>%
+  group_by(StateDesc) %>%
+  summarise(test = mean(binge_drinking)) %>%
+  right_join(states, by = "StateDesc") -> test2
+
+ggplot(test2, aes(x = long, y = lat, group = group, fill = test)) + 
+  geom_polygon(color = "white")+
+    labs(x = "Longitude",
+       y = "Latitude",
+       fill = "Percent
+Binge Drinking",
+       title = "Mean Reported Percent Binge Drinking across States",
+       subtitle = "Data Retreived from CDC 500 Cities")
+```
+
+#### State Map of Physical Activity Variable
+
+```{r map-vis-physical-activity, warning = FALSE, message= FALSE}
+states %>%
+  left_join(data_500_cities, by = "StateDesc") -> test
+data_500_cities %>%
+  group_by(StateDesc) %>%
+  summarise(test = mean(physical_activity)) %>%
+  right_join(states, by = "StateDesc") -> test2
+
+ggplot(test2, aes(x = long, y = lat, group = group, fill = test)) + 
+  geom_polygon(color = "white")+
+    labs(x = "Longitude",
+       y = "Latitude",
+       fill = "Percent No 
+Physical Activity",
+       title = "Mean Reported No Physical Activity across States",
+       subtitle = "Data Retreived from CDC 500 Cities")
+```
+
+#### States Map of Heart Disease Variable
+
+```{r map-vis-heart-disease, warning= FALSE, message= FALSE}
+states %>%
+  left_join(data_500_cities, by = "StateDesc") -> test
+data_500_cities %>%
+  group_by(StateDesc) %>%
+  summarise(test = mean(heart_disease)) %>%
+  right_join(states, by = "StateDesc") -> test2
+
+ggplot(test2, aes(x = long, y = lat, group = group, fill = test)) + 
+  geom_polygon(color = "white") +
+    labs(x = "Longitude",
+       y = "Latitude",
+       fill = "Percent
+Heart Disease",
+       title = "Mean Percent Pop with Heart Disease across States",
+       subtitle = "Data Retreived from CDC 500 Cities")
+```
+
+#### States Map of Diabetes Variable 
+
+```{r map-vis-diabetes, warning= FALSE, Message= FALSE}
+states %>%
+  left_join(data_500_cities, by = "StateDesc") -> test
+data_500_cities %>%
+  group_by(StateDesc) %>%
+  summarise(test = mean(diabetes)) %>%
+  right_join(states, by = "StateDesc") -> test2
+
+ggplot(test2, aes(x = long, y = lat, group = group, fill = test)) + 
+  geom_polygon(color = "white")+
+    labs(x = "Longitude",
+       y = "Latitude",
+       fill = "Percent 
+Diabetes",
+       title = "Mean Percent Pop with Diabetes across States",
+       subtitle = "Data Retreived from CDC 500 Cities")
+```
+
+#### States Map of Kidney Disease Variable
+
+```{r map-vis-kidney-disease, warning= FALSE, message= FALSE}
+states %>%
+  left_join(data_500_cities, by = "StateDesc") -> test
+data_500_cities %>%
+  group_by(StateDesc) %>%
+  summarise(test = mean(kidney_disease)) %>%
+  right_join(states, by = "StateDesc") -> test2
+
+ggplot(test2, aes(x = long, y = lat, group = group, fill = test)) + 
+  geom_polygon(color = "white")+
+    labs(x = "Longitude",
+       y = "Latitude",
+       fill = "Percent
+Kidney Disease",
+       title = "Mean Percent Kidney Disease across States",
+       subtitle = "Data from CDC 500 Cities")
+```
+
+## ANOVA Assumptions Visualizations
 
 NOTE: Use initial visualizations to check if assumptions of ANOVA are met!
 
@@ -900,167 +1094,4 @@ sig_smoking_state_pairs <- broom::tidy(smoking_state_pair) %>%
   arrange(group1,group2)
 nrow(sig_smoking_state_pairs)
 print(sig_smoking_state_pairs)
-```
-
-### Map Visualization
-```{r map-vis}
-theme_set(theme_bw())
-world <- ne_countries(scale = "medium", returnclass = "sf")
-names(world)
-state.name
-
-head(world)
-
-states <- map_data("state")
-states %>%
-  mutate(StateDesc = str_to_title(region)) -> states
-```
-
-### Access Variable: Health Insurance
-
-```{r map-vis-insurance}
-states %>%
-  left_join(data_500_cities, by = "StateDesc") -> test
-data_500_cities %>%
-  group_by(StateDesc) %>%
-  summarise(test = mean(insurance)) %>%
-  right_join(states, by = "StateDesc") -> test2
-
-ggplot(test2, aes(x = long, y = lat, group = group, fill = test)) + 
-  geom_polygon(color = "white")+
-    labs(x = "Longitude",
-       y = "Latitude",
-       title = "Health Insurance across States")
-```
-
-### Access Variables: High Blood Pressure Medicine
-
-```{r map-vis-medicine}
-states %>%
-  left_join(data_500_cities, by = "StateDesc") -> test
-data_500_cities %>%
-  group_by(StateDesc) %>%
-  summarise(test = mean(medicine_high_bp)) %>%
-  right_join(states, by = "StateDesc") -> test2
-
-ggplot(test2, aes(x = long, y = lat, group = group, fill = test)) + 
-  geom_polygon(color = "white")+
-    labs(x = "Longitude",
-       y = "Latitude",
-       title = "High Blood Pressure Medicine across States")
-```
-
-### Access Variable: Visits to Doctor
-
-```{r map-vis-doctor-visits}
-states %>%
-  left_join(data_500_cities, by = "StateDesc") -> test
-data_500_cities %>%
-  group_by(StateDesc) %>%
-  summarise(test = mean(visits_to_doctor)) %>%
-  right_join(states, by = "StateDesc") -> test2
-
-ggplot(test2, aes(x = long, y = lat, group = group, fill = test)) + 
-  geom_polygon(color = "white")+
-    labs(x = "Longitude",
-       y = "Latitude",
-       title = "Visits to Doctor across States")
-```
-
-### Behaviour: Binge Drinking 
-
-```{r map-vis-binge-drinking}
-states %>%
-  left_join(data_500_cities, by = "StateDesc") -> test
-data_500_cities %>%
-  group_by(StateDesc) %>%
-  summarise(test = mean(binge_drinking)) %>%
-  right_join(states, by = "StateDesc") -> test2
-
-ggplot(test2, aes(x = long, y = lat, group = group, fill = test)) + 
-  geom_polygon(color = "white")+
-    labs(x = "Longitude",
-       y = "Latitude",
-       title = "Binge Drinking across States")
-```
-
-### Behaviour: Smoking
-
-```{r map-vis-smoking}
-states %>%
-  left_join(data_500_cities, by = "StateDesc") -> test
-data_500_cities %>%
-  group_by(StateDesc) %>%
-  summarise(test = mean(smoking)) %>%
-  right_join(states, by = "StateDesc") -> test2
-
-ggplot(test2, aes(x = long, y = lat, group = group, fill = test)) + 
-  geom_polygon(color = "white")+
-    labs(x = "Longitude",
-       y = "Latitude",
-       title = "Smoking across States")
-```
-
-### Behaviour: Physical Activity
-```{r map-vis-physical-activity}
-states %>%
-  left_join(data_500_cities, by = "StateDesc") -> test
-data_500_cities %>%
-  group_by(StateDesc) %>%
-  summarise(test = mean(physical_activity)) %>%
-  right_join(states, by = "StateDesc") -> test2
-
-ggplot(test2, aes(x = long, y = lat, group = group, fill = test)) + 
-  geom_polygon(color = "white")+
-    labs(x = "Longitude",
-       y = "Latitude",
-       title = "Physical Activity across States")
-```
-
-### Health Outcome: Diabetes
-```{r map-vis-diabetes}
-states %>%
-  left_join(data_500_cities, by = "StateDesc") -> test
-data_500_cities %>%
-  group_by(StateDesc) %>%
-  summarise(test = mean(diabetes)) %>%
-  right_join(states, by = "StateDesc") -> test2
-
-ggplot(test2, aes(x = long, y = lat, group = group, fill = test)) + 
-  geom_polygon(color = "white")+
-    labs(x = "Longitude",
-       y = "Latitude",
-       title = "Diabetes across States")
-```
-
-### Health Outcome: Heart Disease
-```{r map-vis-heart-disease}
-states %>%
-  left_join(data_500_cities, by = "StateDesc") -> test
-data_500_cities %>%
-  group_by(StateDesc) %>%
-  summarise(test = mean(heart_disease)) %>%
-  right_join(states, by = "StateDesc") -> test2
-
-ggplot(test2, aes(x = long, y = lat, group = group, fill = test)) + 
-  geom_polygon(color = "white")+
-    labs(x = "Longitude",
-       y = "Latitude",
-       title = "Heart Disease across States")
-```
-
-### Health Outcome: Kidney Disease
-```{r map-vis-kidney-disease}
-states %>%
-  left_join(data_500_cities, by = "StateDesc") -> test
-data_500_cities %>%
-  group_by(StateDesc) %>%
-  summarise(test = mean(kidney_disease)) %>%
-  right_join(states, by = "StateDesc") -> test2
-
-ggplot(test2, aes(x = long, y = lat, group = group, fill = test)) + 
-  geom_polygon(color = "white")+
-    labs(x = "Longitude",
-       y = "Latitude",
-       title = "Kidney Disease across States")
 ```
