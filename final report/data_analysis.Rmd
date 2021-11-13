@@ -1012,7 +1012,27 @@ Kidney Disease",
 
 ## ANOVA Assumptions Visualizations
 
-NOTE: Use initial visualizations to check if assumptions of ANOVA are met!
+First, I will filter the data so that states with at least 10 city observations are present.
+
+```{r twenty-observations, warning= FALSE, message= FALSE}
+data_500_cities %>%
+  group_by(StateDesc) %>%
+  summarize(n = n()) %>%
+  print(n = 51)
+```
+
+Based on the table above, Arizona, California, Colorado, Florida, Georgia, Illinois, Indiana, Massachusetts, Michigan, North Carolina, Texas, Virginia, and Washington are the states with at least 10 observations. These states will be the only ones considered in the ANOVA test. Note that California has significantly more observations than all other states.
+
+```{r filter-ANOVA, warning= FALSE, message= FALSE}
+ANOVA_data_500_cities <- data_500_cities %>%
+  filter(StateDesc %in% c("Arizona", "California", "Colorado", "Florida", "Georgia", "Illinois", "Indiana", "Massachusetts", "Michigan", "North Carolina", "Texas", "Virginia", "Washington"))
+```
+
+Assumptions of the ANOVA Test are as Follows:
+
+1) Outcomes within groups are normally distributed
+2) Homoscedastic variance (same variance of individual observations in each group)
+3) Samples are independent. This is likely not the case for this data, so we can compensate for this with a Bonferroni Correction or a Random Effects Model.
 
 ## Overall Tests
 
