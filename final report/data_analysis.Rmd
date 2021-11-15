@@ -1126,8 +1126,66 @@ ANOVA_data_500_cities %>%
     labs(x = "Log % with Kidney Disease", y = NULL, title = "Distribution of Log % with Kidney Disease Grouped By State")
 ```
 
-Based on the visuals above, the variables with the most normal distribution and variance within state groups are insurance, visits_to_doctor, lmedicine_high_bp, and lheartdisease. These will be the variables examined in the ANOVA testing. Independence will be acccounted for with a random effects model.
+Based on the visuals above, the variables with the most normal distribution and variance within state groups are insurance, visits_to_doctor, lmedicine_high_bp, and lheartdisease. These will be the variables examined in the ANOVA testing. Since it is unlikely that there is independence in these tests, we will perform a Bonferroni Correction for the step down tests, where there are 78 tests being conducted at the same time (13 choose 2). The new significance level is 0.05/78 = 0.000641025641
 
 ## Overall Tests
 
+```{r ANOVA-overall-insurance, warning= FALSE, message= FALSE}
+summary(aov(insurance~StateDesc,data=ANOVA_data_500_cities)) %>%
+  print()
+```
+
+```{r ANOVA-overall-visits-to-doctor, warning= FALSE, message= FALSE}
+summary(aov(visits_to_doctor~StateDesc,data=ANOVA_data_500_cities)) %>%
+  print()
+```
+
+```{r ANOVA-overall-lmedicine_high_bp, warning= FALSE, message= FALSE}
+summary(aov(lmedicine_high_bp~StateDesc,data=ANOVA_data_500_cities)) %>%
+  print()
+```
+
+```{r ANOVA-overall-lheart-disease, warning= FALSE, message= FALSE}
+summary(aov(lheart_disease~StateDesc,data=ANOVA_data_500_cities)) %>%
+  print()
+```
+
+All of these tests seem to demonstrate that there are significant differences across states.
+
 ## Step Down Tests
+
+```{r ANOVA-stepdown-insurance, warning= FALSE, message= FALSE}
+insurancepair <- pairwise.t.test(ANOVA_data_500_cities$insurance, ANOVA_data_500_cities$StateDesc, p.adj = "holm")
+siginsurancepairs <- broom::tidy(insurancepair) %>%
+  filter(p.value<0.000641025641) %>%
+  arrange(group1,group2)
+nrow(siginsurancepairs)
+print(siginsurancepairs, n= 19)
+```
+
+```{r ANOVA-stepdown-visits-to-doctor, warning= FALSE, message= FALSE}
+visits_to_doctor_pair <- pairwise.t.test(ANOVA_data_500_cities$visits_to_doctor, ANOVA_data_500_cities$StateDesc, p.adj = "holm")
+sig_visits_to_doctor_pair <- broom::tidy(visits_to_doctor_pair) %>%
+  filter(p.value<0.000641025641) %>%
+  arrange(group1,group2)
+nrow(sig_visits_to_doctor_pair)
+print(sig_visits_to_doctor_pair, n= 47)
+```
+
+```{r ANOVA-stepdown-lmedicine-high-bp, warning= FALSE, message= FALSE}
+lmedicine_high_bp_pair <- pairwise.t.test(ANOVA_data_500_cities$lmedicine_high_bp, ANOVA_data_500_cities$StateDesc, p.adj = "holm")
+sig_lmedicine_high_bp_pair <- broom::tidy(lmedicine_high_bp_pair) %>%
+  filter(p.value<0.000641025641) %>%
+  arrange(group1,group2)
+nrow(sig_lmedicine_high_bp_pair)
+print(sig_lmedicine_high_bp_pair, n= 39)
+```
+
+```{r ANOVA-stepdown-lheart-disease, warning= FALSE, message= FALSE}
+lheart_disease_pair <- pairwise.t.test(ANOVA_data_500_cities$lheart_disease, ANOVA_data_500_cities$StateDesc, p.adj = "holm")
+sig_lheart_disease_pair <- broom::tidy(lheart_disease_pair) %>%
+  filter(p.value<0.000641025641) %>%
+  arrange(group1,group2)
+nrow(sig_lheart_disease_pair)
+print(sig_lheart_disease_pair, n= 7)
+```
