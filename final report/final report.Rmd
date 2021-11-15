@@ -1,0 +1,260 @@
+---
+title: "Final Report"
+author: "Maya Ghanem and Isabelle Xiong"
+date: "11/15/2021"
+output: pdf_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE, echo= FALSE, warning= FALSE, message= FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+```{r load-data-packages, echo= FALSE, warning= FALSE, message= FALSE}
+library(readr)
+library(tidyverse)
+library(readxl)
+library(dplyr)
+library(tidymodels)
+library(patchwork)
+library(plotly)
+library(widgetframe)
+library(here)
+library(sf)
+library(rnaturalearth)
+library(rnaturalearthdata)
+library(rgeos)
+library(patchwork)
+library(ggpubr)
+```
+
+```{r upload-insurance-data, echo= FALSE, message= FALSE, warning= FALSE}
+insurance <- read_excel(here("data/insurance_500_cities.xlsx"))
+```
+
+```{r upload-visits-to-doctor-data, echo= FALSE, message= FALSE, warning= FALSE}
+visits_to_doctor <- read_excel(here("data/visits_to_doctor.xlsx"))
+```
+
+```{r upload-medicine-high-bp-data, echo= FALSE, message= FALSE, warning= FALSE}
+medicine_high_bp <- read_excel(here("data/medicine_high_bp.xlsx"))
+```
+
+```{r upload-smoking-data, echo= FALSE, message= FALSE, warning= FALSE}
+smoking <- read_excel(here("data/smoking.xlsx"))
+```
+
+```{r upload-binge-drinking-data, echo= FALSE, message= FALSE, warning= FALSE}
+binge_drinking <- read_excel(here("data/binge_drinking.xlsx"))
+```
+
+```{r upload-physical-activity-data, echo= FALSE, message= FALSE, warning= FALSE}
+physical_activity <- read_excel(here("data/physical_activity.xlsx"))
+```
+
+```{r upload-heart-disease-data, echo= FALSE, message= FALSE, warning= FALSE}
+heart_disease <- read_excel(here("data/heart_disease.xlsx"))
+```
+
+```{r upload-diabetes-data, echo= FALSE, message=FALSE, warning= FALSE}
+diabetes <- read_excel(here("data/diabetes.xlsx"))
+```
+
+```{r upload-kidney-disease-data, echo= FALSE, message= FALSE, warning= FALSE}
+kidney_disease <- read_excel(here("data/kidney_disease.xlsx"))
+```
+
+```{r edit-insurance-data, echo= FALSE, message= FALSE, warning= FALSE}
+edit_insurance <- insurance %>%
+  select(StateAbbr, StateDesc, CityName, Data_Value_Type, Data_Value, GeoLocation) %>%
+  filter(Data_Value_Type %in% c("Age-adjusted prevalence")) %>%
+  group_by(CityName) %>%
+  mutate(mean_value = mean(Data_Value)) %>%
+  select(StateAbbr, StateDesc, CityName, mean_value, GeoLocation) %>%
+  distinct(CityName, .keep_all = TRUE) %>%
+  rename("insurance" = mean_value)
+```
+
+```{r edit-visits-to-doctor-data, echo= FALSE, message= FALSE, warning= FALSE}
+edit_visits_to_doctor <- visits_to_doctor %>%
+  select(StateAbbr, StateDesc, CityName, Data_Value_Type, Data_Value, GeoLocation) %>%
+  filter(Data_Value_Type %in% c("Age-adjusted prevalence")) %>%
+  group_by(CityName) %>%
+  mutate(mean_value = mean(Data_Value)) %>%
+  select(StateAbbr, StateDesc, CityName, mean_value, GeoLocation) %>%
+  distinct(CityName, .keep_all = TRUE) %>%
+  rename("visits_to_doctor" = mean_value)
+```
+
+```{r edit-medicine-high-bp-data, echo= FALSE, message= FALSE, warning= FALSE}
+edit_medicine_high_bp <- medicine_high_bp %>%
+  select(StateAbbr, StateDesc, CityName, Data_Value_Type, Data_Value, GeoLocation) %>%
+  filter(Data_Value_Type %in% c("Age-adjusted prevalence")) %>%
+  group_by(CityName) %>%
+  mutate(mean_value = mean(Data_Value)) %>%
+  select(StateAbbr, StateDesc, CityName, mean_value, GeoLocation) %>%
+  distinct(CityName, .keep_all = TRUE) %>%
+  rename("medicine_high_bp" = mean_value)
+```
+
+```{r edit-smoking-data, echo= FALSE, message= FALSE, warning= FALSE}
+edit_smoking <- smoking %>%
+  select(StateAbbr, StateDesc, CityName, Data_Value_Type, Data_Value, GeoLocation) %>%
+  filter(Data_Value_Type %in% c("Age-adjusted prevalence")) %>%
+  group_by(CityName) %>%
+  mutate(mean_value = mean(Data_Value)) %>%
+  select(StateAbbr, StateDesc, CityName, mean_value, GeoLocation) %>%
+  distinct(CityName, .keep_all = TRUE) %>%
+  rename("smoking" = mean_value)
+```
+
+```{r edit-binge-drinking-data, echo= FALSE, message= FALSE, warning= FALSE}
+edit_binge_drinking <- binge_drinking %>%
+  select(StateAbbr, StateDesc, CityName, Data_Value_Type, Data_Value, GeoLocation) %>%
+  filter(Data_Value_Type %in% c("Age-adjusted prevalence")) %>%
+  group_by(CityName) %>%
+  mutate(mean_value = mean(Data_Value)) %>%
+  select(StateAbbr, StateDesc, CityName, mean_value, GeoLocation) %>%
+  distinct(CityName, .keep_all = TRUE) %>%
+  rename("binge_drinking" = mean_value)
+```
+
+```{r edit-physical-activity, echo= FALSE, message= FALSE, warning= FALSE}
+edit_physical_activity <- physical_activity %>%
+  select(StateAbbr, StateDesc, CityName, Data_Value_Type, Data_Value, GeoLocation) %>%
+  filter(Data_Value_Type %in% c("Age-adjusted prevalence")) %>%
+  group_by(CityName) %>%
+  mutate(mean_value = mean(Data_Value)) %>%
+  select(StateAbbr, StateDesc, CityName, mean_value, GeoLocation) %>%
+  distinct(CityName, .keep_all = TRUE) %>%
+  rename("physical_activity" = mean_value)
+```
+
+```{r edit-heart-disease-data, echo= FALSE, message= FALSE, warning= FALSE}
+edit_heart_disease <- heart_disease %>%
+  select(StateAbbr, StateDesc, CityName, Data_Value_Type, Data_Value, GeoLocation) %>%
+  filter(Data_Value_Type %in% c("Age-adjusted prevalence")) %>%
+  group_by(CityName) %>%
+  mutate(mean_value = mean(Data_Value)) %>%
+  select(StateAbbr, StateDesc, CityName, mean_value, GeoLocation) %>%
+  distinct(CityName, .keep_all = TRUE) %>%
+  rename("heart_disease" = mean_value)
+```
+
+```{r edit-diabetes-data, echo= FALSE, message= FALSE, warning= FALSE}
+edit_diabetes <- diabetes %>%
+  select(StateAbbr, StateDesc, CityName, Data_Value_Type, Data_Value, GeoLocation) %>%
+  filter(Data_Value_Type %in% c("Age-adjusted prevalence")) %>%
+  group_by(CityName) %>%
+  mutate(mean_value = mean(Data_Value)) %>%
+  select(StateAbbr, StateDesc, CityName, mean_value, GeoLocation) %>%
+  distinct(CityName, .keep_all = TRUE) %>%
+  rename("diabetes" = mean_value)
+```
+
+```{r edit-kidney-disease-data, echo= FALSE, message= FALSE, warning= FALSE}
+edit_kidney_disease <- kidney_disease %>%
+  select(StateAbbr, StateDesc, CityName, Data_Value_Type, Data_Value, GeoLocation) %>%
+  filter(Data_Value_Type %in% c("Age-adjusted prevalence")) %>%
+  group_by(CityName) %>%
+  mutate(mean_value = mean(Data_Value)) %>%
+  select(StateAbbr, StateDesc, CityName, mean_value, GeoLocation) %>%
+  distinct(CityName, .keep_all = TRUE) %>%
+  rename("kidney_disease" = mean_value)
+```
+
+```{r join-data, echo= FALSE, warning= FALSE, message= FALSE}
+data_500_cities <- edit_insurance %>%
+  left_join(edit_visits_to_doctor) %>%
+  left_join(edit_medicine_high_bp) %>%
+  left_join(edit_smoking) %>%
+  left_join(edit_binge_drinking) %>%
+  left_join(edit_physical_activity) %>%
+  left_join(edit_heart_disease) %>%
+  left_join(edit_diabetes) %>%
+  left_join(edit_kidney_disease) %>%
+  select(c(StateAbbr, StateDesc, CityName, insurance, visits_to_doctor, medicine_high_bp, smoking, binge_drinking, physical_activity, heart_disease, diabetes, kidney_disease, GeoLocation))
+```
+
+```{r map-vis, echo= FALSE, warning= FALSE, message= FALSE, include= FALSE}
+theme_set(theme_bw())
+world <- ne_countries(scale = "medium", returnclass = "sf")
+names(world)
+state.name
+```
+
+``` {r states-desc, echo= FALSE, warning= FALSE, message= FALSE}
+states <- map_data("state")
+states %>%
+  mutate(StateDesc = str_to_title(region)) -> states
+```
+
+```{r filter-ANOVA, echo= FALSE, warning= FALSE, message= FALSE}
+ANOVA_data_500_cities <- data_500_cities %>%
+  filter(StateDesc %in% c("Arizona", "California", "Colorado", "Florida", "Georgia", "Illinois", "Indiana", "Massachusetts", "Michigan", "North Carolina", "Texas", "Virginia", "Washington")) %>%
+  mutate(linsruance = log(insurance)) %>%
+  mutate(lvisits_to_doctor = log(visits_to_doctor)) %>%
+  mutate(lmedicine_high_bp = log(medicine_high_bp)) %>%
+  mutate(lheart_disease = log(heart_disease)) %>%
+  mutate(ldiabetes = log(diabetes)) %>%
+  mutate(lkidney_disease = log(kidney_disease))
+```
+
+```{r load-map-data, echo= FALSE, message= FALSE, warning= FALSE}
+map_ANOVA_data_500_cities <- ANOVA_data_500_cities %>%
+  group_by(StateDesc) %>%
+  mutate(insurancemean = mean(insurance)) %>%
+  mutate(visits_to_doctormean = mean(visits_to_doctor)) %>%
+  mutate(lmedicine_high_bpmean = mean(lmedicine_high_bp)) %>%
+  mutate(lheart_diseasemean = mean(lheart_disease))
+
+map_data <- map_ANOVA_data_500_cities %>% 
+  left_join(states, by = "StateDesc")
+```
+
+# Exploratory Data Analysis
+
+```{r state-map-insruance, echo= FALSE, message= FALSE, warning= FALSE, fig.height= 3, fig.width= 5}
+map1 <- ggplot(data = map_data, aes(x = long, y = lat, group = group, fill = insurancemean)) + 
+  geom_polygon(color = "white")+
+    labs(
+       fill = "Percent No 
+Insurance",
+       title = "Mean % No Health Insurance across States",
+subtitle = "Data Retreived from CDC 500 Cities")
+```
+
+```{r state-map-visits_to_doctor, echo= FALSE, message= FALSE, warning= FALSE, fig.height= 3, fig.width= 5}
+map2 <- ggplot(data = map_data, aes(x = long, y = lat, group = group, fill = visits_to_doctormean)) + 
+  geom_polygon(color = "white")+
+    labs(
+       fill = "% Visits 
+to Doctor",
+       title = "Mean % Pop Visiting Doctor across States",
+subtitle = "Data Retreived from CDC 500 Cities")
+```
+
+```{r state-map-lhigh-bp-meds, echo= FALSE, message= FALSE, warning= FALSE, fig.height= 3, fig.width= 5}
+map3 <- ggplot(data = map_data, aes(x = long, y = lat, group = group, fill = lmedicine_high_bpmean)) + 
+  geom_polygon(color = "white")+
+    labs(
+       fill = "Log Percent Taking 
+High BP Meds",
+       title = "Mean Log % Taking High BP Meds",
+subtitle = "Data Retreived from CDC 500 Cities")
+```
+
+```{r state-map-lheart-disease, echo= FALSE, message= FALSE, warning= FALSE, fig.height= 3, fig.width= 5}
+map4 <- ggplot(data = map_data, aes(x = long, y = lat, group = group, fill = lheart_diseasemean)) + 
+  geom_polygon(color = "white")+
+    labs(
+       fill = "Log Percent with 
+Heart Disease",
+       title = "Mean Log % with Heart Disease across States",
+subtitle = "Data Retreived from CDC 500 Cities")
+```
+
+```{r ggarrange-maps, echo= FALSE, message= FALSE, warning= FALSE, fig.height= 3, fig.width = 10}
+ggarrange(map1, map2, map3, map4, row = 2, ncol = 2)
+```
