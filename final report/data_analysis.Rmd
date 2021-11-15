@@ -631,7 +631,7 @@ Also Considers Visits to Doctor and High BP Meds as Explanatory Variables (See R
   )
 ```
 
-There does seem to be a significant pattern in the residual model, so a linear model does not seem appropriate. Try a logistical model here?
+There does seem to be a significant pattern in the residual model, so a linear model does not seem appropriate. We will instead focus on the other variables.
 
 ## Access Variables vs. Diabetes
 
@@ -812,7 +812,7 @@ Also Considers Visits to Doctor and High BP Meds as Explanatory Variables (See R
   )
 ```
 
-There seems to be a significant pattern in the residual plot, so a linear model would not be appropriate. Try a logistic model?
+There seems to be a significant pattern in the residual plot, so a linear model would not be appropriate. We will instead focus on the other variables.
 
 ## ANOVA Testing
 
