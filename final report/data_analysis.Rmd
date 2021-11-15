@@ -812,7 +812,7 @@ Also Considers Visits to Doctor and High BP Meds as Explanatory Variables (See R
   )
 ```
 
-There seems to be a significant pattern in the residual plot, so a lienar model would not be appropriate. Try a logistic model?
+There seems to be a significant pattern in the residual plot, so a linear model would not be appropriate. Try a logistic model?
 
 ## ANOVA Testing
 
@@ -1023,9 +1023,17 @@ data_500_cities %>%
 
 Based on the table above, Arizona, California, Colorado, Florida, Georgia, Illinois, Indiana, Massachusetts, Michigan, North Carolina, Texas, Virginia, and Washington are the states with at least 10 observations. These states will be the only ones considered in the ANOVA test. Note that California has significantly more observations than all other states.
 
+I will now create a new dataset that filters for the states and mutates new log versions of each variable.
+
 ```{r filter-ANOVA, warning= FALSE, message= FALSE}
 ANOVA_data_500_cities <- data_500_cities %>%
-  filter(StateDesc %in% c("Arizona", "California", "Colorado", "Florida", "Georgia", "Illinois", "Indiana", "Massachusetts", "Michigan", "North Carolina", "Texas", "Virginia", "Washington"))
+  filter(StateDesc %in% c("Arizona", "California", "Colorado", "Florida", "Georgia", "Illinois", "Indiana", "Massachusetts", "Michigan", "North Carolina", "Texas", "Virginia", "Washington")) %>%
+  mutate(linsruance = log(insurance)) %>%
+  mutate(lvisits_to_doctor = log(visits_to_doctor)) %>%
+  mutate(lmedicine_high_bp = log(medicine_high_bp)) %>%
+  mutate(lheart_disease = log(heart_disease)) %>%
+  mutate(ldiabetes = log(diabetes)) %>%
+  mutate(lkidney_disease = log(kidney_disease))
 ```
 
 Assumptions of the ANOVA Test are as Follows:
@@ -1034,84 +1042,92 @@ Assumptions of the ANOVA Test are as Follows:
 2) Homoscedastic variance (same variance of individual observations in each group)
 3) Samples are independent. This is likely not the case for this data, so we can compensate for this with a Bonferroni Correction or a Random Effects Model.
 
+```{r checking-ANOVA-assumptions-insurance, warning= FALSE, message= FALSE}
+ANOVA_data_500_cities %>%
+  ggplot(aes(x = insurance)) +
+    geom_histogram() +
+    facet_wrap(~StateDesc) +
+    labs(x = "% Lack of Insurance", y = NULL, title = "Distribution of % Lack of Insurance Grouped By State")
+
+ANOVA_data_500_cities %>%
+  ggplot(aes(x = linsruance)) +
+    geom_histogram() +
+    facet_wrap(~StateDesc) +
+    labs(x = "Log % Lack of Insurance", y = NULL, title = "Distribution of Log % Lack of Insurance Grouped By State")
+```
+
+```{r checking-ANOVA-assumptions-visits-to-doctor, warning= FALSE, message= FALSE}
+ANOVA_data_500_cities %>%
+  ggplot(aes(x = visits_to_doctor)) +
+    geom_histogram() +
+    facet_wrap(~StateDesc) +
+    labs(x = "% Visiting Doctor", y = NULL, title = "Distribution of % Visiting Doctor Grouped By State")
+
+ANOVA_data_500_cities %>%
+  ggplot(aes(x = lvisits_to_doctor)) +
+    geom_histogram() +
+    facet_wrap(~StateDesc) +
+    labs(x = "Log % Visiting Doctor", y = NULL, title = "Distribution of Log % Visiting Doctor Grouped By State")
+```
+
+```{r checking-ANOVA-assumptions-medicine-high-bp, warning= FALSE, message= FALSE}
+ANOVA_data_500_cities %>%
+  ggplot(aes(x = medicine_high_bp)) +
+    geom_histogram() +
+    facet_wrap(~StateDesc) +
+    labs(x = "% Taking BP Meds", y = NULL, title = "Distribution of % Taking BP Meds Grouped By State")
+
+ANOVA_data_500_cities %>%
+  ggplot(aes(x = lmedicine_high_bp)) +
+    geom_histogram() +
+    facet_wrap(~StateDesc) +
+    labs(x = "% Log Taking BP Meds", y = NULL, title = "Distribution of Log % Taking BP Meds Grouped By State")
+```
+
+```{r checking-ANOVA-assumptions-heart-disease, warning= FALSE, message= FALSE}
+ANOVA_data_500_cities %>%
+  ggplot(aes(x = heart_disease)) +
+    geom_histogram() +
+    facet_wrap(~StateDesc) +
+    labs(x = "% with Heart Disease", y = NULL, title = "Distribution of % with Heart Disease Grouped By State")
+
+ANOVA_data_500_cities %>%
+  ggplot(aes(x = lheart_disease)) +
+    geom_histogram() +
+    facet_wrap(~StateDesc) +
+    labs(x = "Log % with Heart Disease", y = NULL, title = "Distribution of % Log with Heart Disease Grouped By State")
+```
+
+```{r checking-ANOVA-assumptions-diabetes, warning= FALSE, message= FALSE}
+ANOVA_data_500_cities %>%
+  ggplot(aes(x = diabetes)) +
+    geom_histogram() +
+    facet_wrap(~StateDesc) +
+    labs(x = "% with Diabetes", y = NULL, title = "Distribution of % with Diabetes Grouped By State")
+
+ANOVA_data_500_cities %>%
+  ggplot(aes(x = ldiabetes)) +
+    geom_histogram() +
+    facet_wrap(~StateDesc) +
+    labs(x = "Log % with Diabetes", y = NULL, title = "Distribution of Log % with Diabetes Grouped By State")
+```
+
+```{r checking-ANOVA-assumptions-kidney disease, warning= FALSE, message= FALSE}
+ANOVA_data_500_cities %>%
+  ggplot(aes(x = kidney_disease)) +
+    geom_histogram() +
+    facet_wrap(~StateDesc) +
+    labs(x = "% with Kidney Disease", y = NULL, title = "Distribution of % with Kidney Disease Grouped By State")
+
+ANOVA_data_500_cities %>%
+  ggplot(aes(x = lkidney_disease)) +
+    geom_histogram() +
+    facet_wrap(~StateDesc) +
+    labs(x = "Log % with Kidney Disease", y = NULL, title = "Distribution of Log % with Kidney Disease Grouped By State")
+```
+
+Based on the visuals above, the variables with the most normal distribution and variance within state groups are insurance, visits_to_doctor, lmedicine_high_bp, and lheartdisease. These will be the variables examined in the ANOVA testing. Independence will be acccounted for with a random effects model.
+
 ## Overall Tests
 
-```{r ANOVA-insurance-state, warning= FALSE, message= FALSE}
-summary(aov(insurance~StateDesc,data=data_500_cities)) %>%
-  print()
-```
-
-```{r ANOVA-visits-to-doctor-state, warning= FALSE, message= FALSE}
-summary(aov(visits_to_doctor~StateDesc,data=data_500_cities)) %>%
-  print()
-```
-
-```{r ANOVA-medicine-high-bp-state, warning= FALSE, message= FALSE}
-summary(aov(medicine_high_bp~StateDesc,data=data_500_cities)) %>%
-  print()
-```
-
-```{r ANOVA-smoking-state, warning= FALSE, message= FALSE}
-summary(aov(smoking~StateDesc,data=data_500_cities)) %>%
-  print()
-```
-
-```{r ANOVA-binge-drinking-state, warning= FALSE, message= FALSE}
-summary(aov(binge_drinking~StateDesc,data=data_500_cities)) %>%
-  print()
-```
-
-```{r ANOVA-physical-activity-state, warning= FALSE, message= FALSE}
-summary(aov(physical_activity~StateDesc,data=data_500_cities)) %>%
-  print()
-```
-
-```{r ANOVA-heart-disease-state, warning= FALSE, message= FALSE}
-summary(aov(heart_disease~StateDesc,data=data_500_cities)) %>%
-  print()
-```
-
-```{r ANOVA-diabetes-state, warning= FALSE, message= FALSE}
-summary(aov(diabetes~StateDesc,data=data_500_cities)) %>%
-  print()
-```
-
-```{r ANOVA-kidney-disease-state, warning= FALSE, message= FALSE}
-summary(aov(kidney_disease~StateDesc,data=data_500_cities)) %>%
-  print()
-```
-
-It seems like pretty much all the overall tests indicate significant variance across the groups.
-
 ## Step Down Tests
-
-```{r step-down-insurance-state, warning= FALSE, message= FALSE}
-insurance_state_pair <- pairwise.t.test(data_500_cities$insurance,    data_500_cities$StateDesc, p.adj = "holm")
-sig_ins_state_pairs <- broom::tidy(insurance_state_pair) %>%
-  filter(p.value<0.05) %>%
-  arrange(group1,group2)
-nrow(sig_ins_state_pairs)
-print(sig_ins_state_pairs)
-```
-
-The overall ANOVA test says there is a significance but the Step Down stests show no significant pairs?
-
-```{r step-down-doctor-state, warning= FALSE, message= FALSE}
-doctor_state_pair <- pairwise.t.test(data_500_cities$visits_to_doctor,    data_500_cities$StateDesc, p.adj = "holm")
-sig_doctor_state_pairs <- broom::tidy(doctor_state_pair) %>%
-  filter(p.value<0.05) %>%
-  arrange(group1,group2)
-nrow(sig_doctor_state_pairs)
-print(sig_doctor_state_pairs)
-```
-
-Ok so there is clearly an issue. I think I am interpreting the F-statistic incorrectly?
-
-```{r step-down-smoking-state, warning= FALSE, message= FALSE}
-smoking_state_pair <- pairwise.t.test(data_500_cities$smoking,    data_500_cities$StateDesc, p.adj = "holm")
-sig_smoking_state_pairs <- broom::tidy(smoking_state_pair) %>%
-  filter(p.value<0.05) %>%
-  arrange(group1,group2)
-nrow(sig_smoking_state_pairs)
-print(sig_smoking_state_pairs)
-```
