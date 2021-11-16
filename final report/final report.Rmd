@@ -366,3 +366,61 @@ Figure 2: State Distribution of Healhcare Access, Behavior, and Health Outcome V
 ggarrange(map1, map2, map3, map4, row = 2, ncol = 2) %>%
   print()
 ```
+
+# Analytic Methods
+
+## Research Question 2
+
+We conducted ANOVA testing to determine if there was variance within and between states for the healthcare access, behavior, and health outcome variables. After first checking for ANOVA test assumptions, we determine that state distributions of % lack of insurance, % visiting the doctor, log % with heart disease, and log % taking high BP medications had normal distributions within groups and homoscedastic variance. Since it is highly unlikely that the samples are independent, we employed a Bonferroni correction with a subsequent significance level of p = 0.000641025641. 
+
+# Results
+
+ANOVA tests provided evidence that there is significant variances between and within states for % lack of insurance, % visiting the doctor, log % with heart disease, and log % taking high BP medications.  The step down tests demonstrated that there are 19 significant pairs for % lack of insurance, 47 significant pairs for % visiting doctor, 39 significant pairs for log % taking high BP meds, and 7 significant pairs for log % with heart disease. Florida and Texas had the most significant pairs (9 each) for the insurance step down tests, Colorado and Washington had the most significant pairs (10 each) for the visits to doctor step down tests, California, Colorado, Georgia, and Washington (9 each) had the most significant pairs for the log medicine high BP step down tests, and Colorado had the most significant pairs (3) for the log % heart disease step down tests. The only step-down test that had states with no significant pairs was for log % heart disease.
+
+# Discussion
+
+## Research Question 2
+
+The ANOVA testing demonstrated that there is variance within and across states for lack of insurance, visits to doctor, heart disease, and taking High BP medication rates. Based on their higher F-squared values and greater number of significant pairs, visits to doctor and High BP Medication rates seemed to have more variance than lack of insurance and heart disease.
+
+These results are significant in supporting Zuckerman’s article on how there are differences in insurance coverage across states, with California, Texas, and Colorado having disproportionately high uninsurance rates (Zuckerman 1999, 8). These variances for health insurance correspond with state based variances for doctors’ visits, heart disease prevalence, and people taking high blood pressure medications. Although the ANOVA testing does not depict which states have disproportionately high or low insurance rates, the fact that California, Texas, and Colorado commonly appear in significant pairs for the step-down tests supports Zuckerman’s results.
+
+A Bonferroni correction is implemented on the ANOVA testing because it is unlikely that the state distributions are independent from each other, but the research is limited in identifying what exactly causes a lack of independence. Identifying this cause could allow one to correct the lack of independence more accurately.
+
+Further research should investigate the socioeconomic and policy factors that contribute to differences between and within states. Are the differences due to differing statewide healthcare policies or the result of inherent economic inequality between states? 
+
+# References
+
+https://chronicdata.cdc.gov/500-Cities-Places/500-Cities-Local-Data-for-Better-Health-2019-relea/6vp6-wxuq
+
+https://www.urban.org/sites/default/files/publication/66251/309311-Snapshots-of-America-s-Families.PDF 
+
+https://www.annualreviews.org/doi/abs/10.1146/annurev.publhealth.28.021406.144042 
+
+# Appendix
+
+## Overall ANOVA Tests 
+
+State Distribution of People Lacking Insurance
+```{r ANOVA-overall-insurance, echo= FALSE, warning= FALSE, message= FALSE}
+summary(aov(insurance~StateDesc,data=ANOVA_data_500_cities)) %>%
+  print()
+```
+
+State Distribution of People Visiting Doctor
+```{r ANOVA-overall-visits-to-doctor, echo= FALSE, warning= FALSE, message= FALSE}
+summary(aov(visits_to_doctor~StateDesc,data=ANOVA_data_500_cities)) %>%
+  print()
+```
+
+State Distribution of People Taking High BP Meds
+```{r ANOVA-overall-lmedicine_high_bp, echo= FALSE, warning= FALSE, message= FALSE}
+summary(aov(lmedicine_high_bp~StateDesc,data=ANOVA_data_500_cities)) %>%
+  print()
+```
+
+State Distribution of People with Heart Disease
+```{r ANOVA-overall-lheart-disease, echo= FALSE, warning= FALSE, message= FALSE}
+summary(aov(lheart_disease~StateDesc,data=ANOVA_data_500_cities)) %>%
+  print()
+```
