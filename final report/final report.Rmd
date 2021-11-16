@@ -8,7 +8,7 @@ editor_options:
 ---
 
 ```{r setup, include=FALSE, echo= FALSE, warning= FALSE, message= FALSE}
-knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(echo = FALSE, warning= FALSE, message= FALSE)
 ```
 
 ```{r load-data-packages, echo= FALSE, warning= FALSE, message= FALSE}
@@ -27,6 +27,9 @@ library(rnaturalearthdata)
 library(rgeos)
 library(patchwork)
 library(ggpubr)
+library(palmerpenguins)
+library(knitr)
+library(xaringanthemer)
 ```
 
 ```{r upload-insurance-data, echo= FALSE, message= FALSE, warning= FALSE}
@@ -312,9 +315,10 @@ plot6 <- data_500_cities %>%
 ```
 
 Figure 1: % Lacking Insurance vs. Behavior and Health Outcome Variables
-```{r ggarrange-scatterplots, echo= FALSE, message= FALSE, warning= FALSE, fig.width = 10, fig.height = 3}
-ggarrange(plot1, plot2, plot3, plot4, plot5, plot6, row = 2, ncol = 3) %>%
-  print()
+
+
+```{r ggarrange-scatterplots, echo= FALSE, message= FALSE, warning= FALSE, fig.width = 10, fig.height = 6}
+ggarrange(plot1, plot2, plot3, plot4, plot5, plot6, nrow = 2, ncol = 3)
 ```
 
 ## Research Question 2
@@ -361,17 +365,22 @@ Heart Disease",
 subtitle = "Data Retreived from CDC 500 Cities")
 ```
 
-Figure 2: State Distribution of Healhcare Access, Behavior, and Health Outcome Variables
-```{r ggarrange-maps, echo= FALSE, message= FALSE, warning= FALSE, fig.height= 3, fig.width = 10}
-ggarrange(map1, map2, map3, map4, row = 2, ncol = 2) %>%
-  print()
+Figure 2: State Distribution of Healthcare Access, Behavior, and Health Outcome Variables
+
+
+```{r ggarrange-maps, echo= FALSE, message= FALSE, warning= FALSE, fig.height= 6, fig.width = 10}
+ggarrange(map1, map2, map3, map4, nrow = 2, ncol = 2)
 ```
 
 # Analytic Methods
 
+## Research Question 1
+
+It is highly unlikely that the samples are independent; for example, the fact that a person who has insurance is more likely to visit the doctor and take medications demonstrates that these groups are not independent.
+
 ## Research Question 2
 
-We conducted ANOVA testing to determine if there was variance within and between states for the healthcare access, behavior, and health outcome variables. After first checking for ANOVA test assumptions, we determine that state distributions of % lack of insurance, % visiting the doctor, log % with heart disease, and log % taking high BP medications had normal distributions within groups and homoscedastic variance. Since it is highly unlikely that the samples are independent, we employed a Bonferroni correction with a subsequent significance level of p = 0.000641025641. 
+We conducted ANOVA testing to determine if there was variance within and between states for the healthcare access, behavior, and health outcome variables. We determined that state distributions of % lack of insurance, % visiting the doctor, log % with heart disease, and log % taking high BP medications had normal distributions within groups and homoscedastic variance and therefore fit the assumptions for ANOVA testing. It is highly unlikely that the samples groups within an ANOVA test are independent; for example, certain states may share similar political contexts and could be more likely to share simliar health outcomes. We employed a Bonferroni correction with a subsequent significance level of p = 0.000641025641. 
 
 # Results
 
@@ -400,27 +409,3 @@ https://www.annualreviews.org/doi/abs/10.1146/annurev.publhealth.28.021406.14404
 # Appendix
 
 ## Overall ANOVA Tests 
-
-State Distribution of People Lacking Insurance
-```{r ANOVA-overall-insurance, echo= FALSE, warning= FALSE, message= FALSE}
-summary(aov(insurance~StateDesc,data=ANOVA_data_500_cities)) %>%
-  print()
-```
-
-State Distribution of People Visiting Doctor
-```{r ANOVA-overall-visits-to-doctor, echo= FALSE, warning= FALSE, message= FALSE}
-summary(aov(visits_to_doctor~StateDesc,data=ANOVA_data_500_cities)) %>%
-  print()
-```
-
-State Distribution of People Taking High BP Meds
-```{r ANOVA-overall-lmedicine_high_bp, echo= FALSE, warning= FALSE, message= FALSE}
-summary(aov(lmedicine_high_bp~StateDesc,data=ANOVA_data_500_cities)) %>%
-  print()
-```
-
-State Distribution of People with Heart Disease
-```{r ANOVA-overall-lheart-disease, echo= FALSE, warning= FALSE, message= FALSE}
-summary(aov(lheart_disease~StateDesc,data=ANOVA_data_500_cities)) %>%
-  print()
-```
