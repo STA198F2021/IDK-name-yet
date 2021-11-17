@@ -314,7 +314,7 @@ plot6 <- data_500_cities %>%
   )
 ```
 
-Figure 1: % Lacking Insurance vs. Behavior and Health Outcome Variables
+### Figure 1: % Lacking Insurance vs. Behavior and Health Outcome Variables
 
 
 ```{r ggarrange-scatterplots, echo= FALSE, message= FALSE, warning= FALSE, fig.width = 10, fig.height = 6}
@@ -365,7 +365,7 @@ Heart Disease",
 subtitle = "Data Retreived from CDC 500 Cities")
 ```
 
-Figure 2: State Distribution of Healthcare Access, Behavior, and Health Outcome Variables
+### Figure 2: State Distribution of Healthcare Access, Behavior, and Health Outcome Variables
 
 
 ```{r ggarrange-maps, echo= FALSE, message= FALSE, warning= FALSE, fig.height= 6, fig.width = 10}
@@ -376,13 +376,112 @@ ggarrange(map1, map2, map3, map4, nrow = 2, ncol = 2)
 
 ## Research Question 1
 
-It is highly unlikely that the samples are independent; for example, the fact that a person who has insurance is more likely to visit the doctor and take medications demonstrates that these groups are not independent.
-
 ## Research Question 2
 
 We conducted ANOVA testing to determine if there was variance within and between states for the healthcare access, behavior, and health outcome variables. We determined that state distributions of % lack of insurance, % visiting the doctor, log % with heart disease, and log % taking high BP medications had normal distributions within groups and homoscedastic variance and therefore fit the assumptions for ANOVA testing. It is highly unlikely that the samples groups within an ANOVA test are independent; for example, certain states may share similar political contexts and could be more likely to share simliar health outcomes. We employed a Bonferroni correction with a subsequent significance level of p = 0.000641025641. 
 
 # Results
+
+## Research Question 1
+
+It is highly unlikely that the samples are independent; for example, the fact that a person who has insurance is more likely to visit the doctor and take medications demonstrates that these groups are not independent.
+
+```{r linear-regression-access-smoking-int, include= FALSE}
+int_access_smoking_fit <- linear_reg() %>%
+  set_engine("lm") %>%
+  fit(smoking ~ insurance + visits_to_doctor + medicine_high_bp + (insurance * visits_to_doctor) + (insurance * medicine_high_bp) + (visits_to_doctor * medicine_high_bp), data = data_500_cities)
+int_access_smoking_fit_aug <- augment(int_access_smoking_fit$fit)
+tidy(int_access_smoking_fit) %>%
+  print()
+```
+
+```{r graph-regression-access-smoking-all-int}
+smokingregressiongraph <- data_500_cities %>%
+ggplot(mapping = aes(x = insurance, y = smoking)) + 
+geom_point(size = 0.25) +
+geom_smooth(method = "lm", data = int_access_smoking_fit_aug, mapping = aes(x = insurance, y = .fitted)) +
+  labs(
+    title = "vs. Percentage of Smoking Adults",
+    subtitle = "Data from CDC 500 Cities",
+    x = "Percent Pop Lacking Insurance",
+    y = "Percent of Pop Smoking Adults"
+  )
+```
+
+```{r linear-regression-access-binge-drinking-int, include= FALSE}
+int_access_binge_drinking_fit <- linear_reg() %>%
+  set_engine("lm") %>%
+  fit(binge_drinking ~ insurance + visits_to_doctor + medicine_high_bp + (insurance * visits_to_doctor) + (insurance * medicine_high_bp) + (visits_to_doctor * medicine_high_bp), data = data_500_cities)
+int_access_binge_drinking_fit_aug <- augment(int_access_binge_drinking_fit$fit)
+tidy(int_access_binge_drinking_fit) %>%
+  print()
+```
+
+```{r graph-regression-access-binge-drinking-all-int, warning= FALSE, message= FALSE}
+bingedrinkingregressiongraph <- data_500_cities %>%
+ggplot(mapping = aes(x = insurance, y = binge_drinking)) + 
+geom_point(size = 0.25) +
+geom_smooth(method = "lm", data = int_access_binge_drinking_fit_aug, mapping = aes(x = insurance, y = .fitted)) +
+  labs(
+    title = "vs. Reporting Binge Drinking",
+    subtitle = "Data from CDC 500 Cities",
+    x = "Percent of City Lacking Insurance",
+    y = "Percent of City Reporting Binge Drinking"
+  ) 
+```
+
+```{r linear-regression-access-physical-activity-all-int, include= FALSE}
+int_access_physical_activity_fit <- linear_reg() %>%
+  set_engine("lm") %>%
+  fit(physical_activity ~ insurance + visits_to_doctor + medicine_high_bp + (insurance * visits_to_doctor) + (insurance * medicine_high_bp) + (visits_to_doctor * medicine_high_bp), data = data_500_cities)
+int_access_physical_activity_fit_aug <- augment(int_access_physical_activity_fit$fit)
+tidy(int_access_physical_activity_fit) %>%
+  print()
+```
+
+```{r graph-regression-access-physical-activity-all-int, warning= FALSE, message= FALSE}
+physicalactivityregressiongraph <- data_500_cities %>%
+ggplot( mapping = aes(x = insurance, y = physical_activity)) + 
+geom_point(size = 0.25) +
+geom_smooth(method = "lm", data = int_access_physical_activity_fit_aug, mapping = aes(x = insurance, y = .fitted)) +
+  labs(
+    title = "vs. No Physical Activity",
+    subtitle = "Data from CDC 500 Cities",
+x = "Percent of City Lacking Insurance",
+y = "Percent of City Reporting No Physical Activity"
+  )
+```
+
+```{r linear-regression-access-diabetes-int, include= FALSE}
+int_access_diabetes_fit <- linear_reg() %>%
+  set_engine("lm") %>%
+  fit(diabetes ~ insurance + visits_to_doctor + medicine_high_bp + (insurance * visits_to_doctor) + (insurance * medicine_high_bp) + (visits_to_doctor * medicine_high_bp), data = data_500_cities)
+int_access_diabetes_fit_aug <- augment(int_access_diabetes_fit$fit)
+tidy(int_access_diabetes_fit) %>%
+  print()
+```
+
+```{r graph-regression-access-diabetes-all-int, warning= FALSE, message= FALSE}
+diabetesregressiongraph <- data_500_cities %>%
+ggplot( mapping = aes(x = insurance, y = diabetes)) + 
+geom_point(size = 0.25) +
+geom_smooth(method = "lm", data = int_access_diabetes_fit_aug, mapping = aes(x = insurance, y = .fitted)) +
+  labs(
+    title = "vs. Adults with Diabetes",
+    subtitle = "Data from CDC 500 Cities",
+x = "Percent of City Lacking Insurance",
+y = "Percent of City Adults with Diabetes"
+  )
+```
+
+### Figure 3: Percent Lacking Insurance vs. Response Variables (Titled in Quadrants)
+Linear Regression Considers Visits to Doctor and High BP Meds as Explanatory Variables
+
+```{r ggarrange-regressions, echo= FALSE, message= FALSE, warning= FALSE, fig.width = 10, fig.height = 6}
+ggarrange(smokingregressiongraph, bingedrinkingregressiongraph, physicalactivityregressiongraph, diabetesregressiongraph, nrow = 2, ncol = 2)
+```
+
+## Research Question 2
 
 ANOVA tests provided evidence that there is significant variances between and within states for % lack of insurance, % visiting the doctor, log % with heart disease, and log % taking high BP medications.  The step down tests demonstrated that there are 19 significant pairs for % lack of insurance, 47 significant pairs for % visiting doctor, 39 significant pairs for log % taking high BP meds, and 7 significant pairs for log % with heart disease. Florida and Texas had the most significant pairs (9 each) for the insurance step down tests, Colorado and Washington had the most significant pairs (10 each) for the visits to doctor step down tests, California, Colorado, Georgia, and Washington (9 each) had the most significant pairs for the log medicine high BP step down tests, and Colorado had the most significant pairs (3) for the log % heart disease step down tests. The only step-down test that had states with no significant pairs was for log % heart disease.
 
