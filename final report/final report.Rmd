@@ -1,7 +1,7 @@
 ---
-title: "Final Report"
+title: "Health Access, Behaviors, and Health Outcomes Across United States Cities"
 author: "Maya Ghanem and Isabelle Xiong"
-date: "11/15/2021"
+date: "11/16/2021"
 output: pdf_document
 editor_options: 
   chunk_output_type: console
@@ -388,7 +388,7 @@ ggarrange(map1, map2, map3, map4, nrow = 2, ncol = 2)
 
 ## Research Question 1
 
-We modeled our data with a linear regression to determine if there were significant correlations between healthcare access variables and mental health and physical health outcomes. We did not add any interactions to our linear models because all the explanatory variables are numerical, and the course does not encompass an analysis of interactions between two numerical variables. To determine whether a linear regression model would be appropriate, we made residual plots for each health outcome to check for any patterns in the residuals. For smoking, binge drinking, physical activity, and diabetes, there didn’t seem to be a significant pattern in the residual plot, so a linear regression model was appropriate. However, for coronary heart disease and kidney disease, there was a pattern in the residual plot where the higher the predicted percentage of adults with diabetes, the larger the magnitude of the residual, such that a linear regression model would not be appropriate.
+We modeled our data with a linear regression to determine if there were significant correlations between healthcare access variables and mental health and physical health outcomes. We did not add any interactions to our linear models because all the explanatory variables are numerical, and the course does not encompass an analysis of interactions between two numerical variables. To determine whether a linear regression model would be appropriate, we made residual plots for each health outcome to check for any patterns in the residuals. For smoking, binge drinking, physical activity, and diabetes, there didn’t seem to be a significant pattern in the residual plot, so a linear regression model was appropriate. However, for coronary heart disease and kidney disease, there was a pattern in the residual plot where the higher the predicted percentage of adults with diabetes, the larger the magnitude of the residual, such that a linear regression model would not be appropriate. 
 
 ## Research Question 2
 
@@ -402,7 +402,7 @@ We conducted ANOVA testing to determine if there was variance within and between
 
 2) Holding all other variables constant when evaluating each explanatory variable, we expect a 0.162 percentage decrease of adults in a city reporting binge drinking for every percent increase of adults in a city lacking access to health insurance, a 0.0565 percentage increase in adults in a city reporting binge drinking for each percentage increase of adults in a city visiting doctor for routine checkup within the past year, and a 0.137 percentage decrease in adults in a city reporting binge drinking for each percent increase in adults in a city with high blood pressure had access to high blood pressure medication. The coefficient for all three variables are statistically significant (p-value < 0.05).
 
-3) Holding all other variables constant when evaluating each explanatory variable, we expect a 0.533 percentage increase of adults in a city reporting no physical activity for each percent increase of adults in a city lacking health insurance, a 0.0625 percentage decrease in of adults in a city reporting no physical activity for each percent increase of adults in a visiting doctor for routine checkup within the past year, and a 0.738 percentage increase of adults in a city reporting no physical activity for each percent increase of adults in a city with high blood pressure had access to high blood pressure medication. The coefficient for all three variables are statistically significant (p-value < 0.05).
+3) Holding all other variables constant when evaluating each explanatory variable, we expect a 0.0669 percentage increase of adults in a city reporting no physical activity for each percent increase of adults in a city lacking health insurance, a 0.0113 percentage decrease in of adults in a city reporting no physical activity for each percent increase of adults in a visiting doctor for routine checkup within the past year, and a 0.1220 percentage increase of adults in a city reporting no physical activity for each percent increase of adults in a city with high blood pressure had access to high blood pressure medication. The coefficient for all three variables are statistically significant (p-value < 0.05). 
 
 4) Holding all other variables constant when evaluating each explanatory variable, we expect a 0.239 percentage increase in population diagnosed with diabetes for each percent increase of adults in a city lacking health insurance, a 0.065 percentage decrease in population diagnosed with diabetes for each percent increase of adults in a visiting doctor for routine checkup within the past year, and a 0.171 percentage increase in population diagnosed with diabetes for each percent increase of adults in a city with high blood pressure had access to high blood pressure medication. The coefficient for all three variables are statistically significant (p-value < 0.05). 
 
@@ -513,9 +513,10 @@ kable(head(regressionpvalues))
 
 ## Research Question 2
 
-ANOVA tests provided evidence that there is significant variances between and within states for % lack of insurance, % visiting the doctor, log % with heart disease, and log % taking high BP medications.  The step down tests demonstrated that there are 19 significant pairs for % lack of insurance, 47 significant pairs for % visiting doctor, 39 significant pairs for log % taking high BP meds, and 7 significant pairs for log % with heart disease. Florida and Texas had the most significant pairs (9 each) for the insurance step down tests, Colorado and Washington had the most significant pairs (10 each) for the visits to doctor step down tests, California, Colorado, Georgia, and Washington (9 each) had the most significant pairs for the log medicine high BP step down tests, and Colorado had the most significant pairs (3) for the log % heart disease step down tests. The only step-down test that had states with no significant pairs was for log % heart disease.
+ANOVA tests provided evidence that there are significant variances between and within states for % lack of insurance, % visiting the doctor, log % with heart disease, and log % taking high BP medications.  The step down tests demonstrated that there are 19 significant pairs for % lack of insurance, 47 significant pairs for % visiting doctor, 39 significant pairs for log % taking high BP meds, and 7 significant pairs for log % with heart disease. Florida and Texas had the most significant pairs (9 each) for the insurance step down tests, Colorado and Washington had the most significant pairs (10 each) for the visits to doctor step down tests, California, Colorado, Georgia, and Washington (9 each) had the most significant pairs for the log medicine high BP step down tests, and Colorado had the most significant pairs (3) for the log % heart disease step down tests. The only step-down test that had states with no significant pairs was for log % heart disease.
 
 ### Table 3: ANOVA Summary Table Including F-Statistics and Significant Pairs
+
 ```{r ANOVA-table, echo = FALSE, fig.height = 5}
 kable(head(ANOVA_Summary_table))
 ```
@@ -523,6 +524,14 @@ kable(head(ANOVA_Summary_table))
 # Discussion
 
 ## Research Question 1
+
+The linear regression models demonstrated that there is generally a positive correlation between health insurance and mental and physical health outcomes. This result matches the findings of Zuckerman’s article that a lack of health insurance impacts other health outcomes. The only exception is that one linear regression suggested decreased binge drinking as healthcare access decreases. This is counter intuitive to the idea that less access to health care results in worse behavior outcomes
+
+The adjusted R-square values for Smoking, Diabetes and Physical activity are above 0.5, meaning that more than 50% of the variability in the outcome data can be explained by the linear model. The adjusted R-square value for Binge Drinking is 0.2367, suggesting that only around 24% of the variability in the outcome data can be explained by the linear model. 
+
+It is highly unlikely that the explanatory variables are independent; for example, the fact that a person who has insurance is more likely to visit the doctor and take medications demonstrates that these groups are not independent. A way to remedy this would be to include interactions between correlated explanatory variables, but interpreting interactions between two numerical variables is beyond the scope of this course.
+
+Further research could look into causes for the correlations between the variables in the linear regressions. In particular, further research should investigate why there is a negative correlation between percent of city lacking health care access and percent of city binge drinking. A different type of regression model would likely be more appropriate and have higher adjusted R-square values closer to 1. Further research should look into different types of regression models for the data, but this is beyond the scope of the course.
 
 ## Research Question 2
 
