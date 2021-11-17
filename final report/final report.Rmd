@@ -242,9 +242,9 @@ The original dataset includes about 29,000 observations, with multiple measureme
 
 # Research Questions
 
-1) Do cities with a greater lack of healthcare access have poorer mental health and/or physical health outcomes? 
+1) Do cities with a greater lack of healthcare access have poorer health behaviors and/or physical health outcomes? 
 
-2) Does healthcare access, mental health, and/or physical health outcomes vary by state?
+2) Does healthcare access, health behaviors, and/or physical health outcomes vary by state?
 
 # Variables of Interest
 
@@ -328,10 +328,11 @@ plot6 <- data_500_cities %>%
 
 ### Figure 1: % Lacking Insurance vs. Behavior and Health Outcome Variables
 
-
 ```{r ggarrange-scatterplots, echo= FALSE, message= FALSE, warning= FALSE, fig.width = 10, fig.height = 6}
 ggarrange(plot1, plot2, plot3, plot4, plot5, plot6, nrow = 2, ncol = 3)
 ```
+
+The prevalence of negative physical health outcomes have a greater positive correlation with % of population lacking health insurance than the prevalence of negative behaviors. We note that there seems to be a negative correlation between percent of city reporting binge drinking and percent of city lacking health insurance.
 
 ## Research Question 2
 
@@ -384,15 +385,17 @@ subtitle = "Data Retreived from CDC 500 Cities")
 ggarrange(map1, map2, map3, map4, nrow = 2, ncol = 2)
 ```
 
+Based on the maps, it seems that Texas has the greatest percentage of people uninsured, Georgia has the greatest percentage of people taking high blood pressure medications and the highest percent of people visiting the doctor, and Illinois has the highest percentage of people with heart disease.
+
 # Analytic Methods
 
 ## Research Question 1
 
-We modeled our data with a linear regression to determine if there were significant correlations between healthcare access variables and mental health and physical health outcomes. We did not add any interactions to our linear models because all the explanatory variables are numerical, and the course does not encompass an analysis of interactions between two numerical variables. To determine whether a linear regression model would be appropriate, we made residual plots for each health outcome to check for any patterns in the residuals. For smoking, binge drinking, physical activity, and diabetes, there didn’t seem to be a significant pattern in the residual plot, so a linear regression model was appropriate. However, for coronary heart disease and kidney disease, there was a pattern in the residual plot where the higher the predicted percentage of adults with diabetes, the larger the magnitude of the residual, such that a linear regression model would not be appropriate. 
+We modeled our data with a linear regression to determine if there were significant correlations between healthcare access variables and health behaviors and physical health outcomes. We did not add any interactions to our linear models because all the explanatory variables are numerical, and the course does not encompass an analysis of interactions between two numerical variables. To determine whether a linear regression model would be appropriate, we made residual plots for each health outcome to check for any patterns in the residuals. For smoking, binge drinking, physical activity, and diabetes, there didn’t seem to be a significant pattern in the residual plot, so a linear regression model was appropriate. However, for coronary heart disease and kidney disease, there was a pattern in the residual plot where the higher the predicted percentage of adults with diabetes, the larger the magnitude of the residual, such that a linear regression model would not be appropriate. 
 
 ## Research Question 2
 
-We conducted ANOVA testing to determine if there was variance within and between states for the healthcare access, behavior, and health outcome variables. We determined that state distributions of % lack of insurance, % visiting the doctor, log % with heart disease, and log % taking high BP medications had normal distributions within groups and homoscedastic variance and therefore fit the assumptions for ANOVA testing. It is highly unlikely that the samples groups within an ANOVA test are independent; for example, certain states may share similar political contexts and could be more likely to share simliar health outcomes. We employed a Bonferroni correction with a subsequent significance level of p = 0.000641025641. 
+We conducted ANOVA testing to determine if there was variance within and between states for the healthcare access, behavior, and health outcome variables. We determined that state distributions of percent lack of insurance, percent visiting the doctor, log percent with heart disease, and log percent taking high BP medications had normal distributions within groups and homoscedastic variance, therefore fitting the assumptions for ANOVA testing. It is highly unlikely that the samples groups within an ANOVA test are independent; for example, certain states may share similar political contexts and could be more likely to share simliar health outcomes. We employed a Bonferroni correction with a subsequent significance level of p = 0.000641025641. 
 
 # Results
 
@@ -513,19 +516,19 @@ kable(head(regressionpvalues))
 
 ## Research Question 2
 
-ANOVA tests provided evidence that there are significant variances between and within states for % lack of insurance, % visiting the doctor, log % with heart disease, and log % taking high BP medications.  The step down tests demonstrated that there are 19 significant pairs for % lack of insurance, 47 significant pairs for % visiting doctor, 39 significant pairs for log % taking high BP meds, and 7 significant pairs for log % with heart disease. Florida and Texas had the most significant pairs (9 each) for the insurance step down tests, Colorado and Washington had the most significant pairs (10 each) for the visits to doctor step down tests, California, Colorado, Georgia, and Washington (9 each) had the most significant pairs for the log medicine high BP step down tests, and Colorado had the most significant pairs (3) for the log % heart disease step down tests. The only step-down test that had states with no significant pairs was for log % heart disease.
+ANOVA tests provided evidence that there are significant variances between and within states for percent lack of insurance, percent visiting the doctor, log percent with heart disease, and log percent taking high BP medications.  The step down tests demonstrated that there are 19 significant pairs for percent lack of insurance, 47 significant pairs for percent visiting doctor, 39 significant pairs for log percent taking high BP meds, and 7 significant pairs for log percent with heart disease. Florida and Texas had the most significant pairs (9 each) for the insurance step down tests, Colorado and Washington had the most significant pairs (10 each) for the visits to doctor step down tests, California, Colorado, Georgia, and Washington (9 each) had the most significant pairs for the log medicine high BP step down tests, and Colorado had the most significant pairs (3) for the log % heart disease step down tests. The only step-down test that had states with no significant pairs was for log percent heart disease.
 
 ### Table 3: ANOVA Summary Table Including F-Statistics and Significant Pairs
 
 ```{r ANOVA-table, echo = FALSE, fig.height = 5}
-kable(head(ANOVA_Summary_table))
+kable((ANOVA_Summary_table))
 ```
 
 # Discussion
 
 ## Research Question 1
 
-The linear regression models demonstrated that there is generally a positive correlation between health insurance and mental and physical health outcomes. This result matches the findings of Zuckerman’s article that a lack of health insurance impacts other health outcomes. The only exception is that one linear regression suggested decreased binge drinking as healthcare access decreases. This is counter intuitive to the idea that less access to health care results in worse behavior outcomes
+The linear regression models demonstrate that there is generally a positive correlation between health insurance and negative behaviors and physical health outcomes. This result matches the findings of Zuckerman’s article that a lack of health insurance impacts other health outcomes. The only exception is that one linear regression suggested decreased binge drinking as healthcare access decreases. This is counter intuitive to the idea that less access to health care results in worse behavior outcomes.
 
 The adjusted R-square values for Smoking, Diabetes and Physical activity are above 0.5, meaning that more than 50% of the variability in the outcome data can be explained by the linear model. The adjusted R-square value for Binge Drinking is 0.2367, suggesting that only around 24% of the variability in the outcome data can be explained by the linear model. 
 
@@ -537,7 +540,7 @@ Further research could look into causes for the correlations between the variabl
 
 The ANOVA testing demonstrated that there is variance within and across states for lack of insurance, visits to doctor, heart disease, and taking High BP medication rates. Based on their higher F-squared values and greater number of significant pairs, visits to doctor and High BP Medication rates seemed to have more variance than lack of insurance and heart disease.
 
-These results are significant in supporting Zuckerman’s article on how there are differences in insurance coverage across states, with California, Texas, and Colorado having disproportionately high uninsurance rates (Zuckerman 1999, 8). These variances for health insurance correspond with state based variances for doctors’ visits, heart disease prevalence, and people taking high blood pressure medications. Although the ANOVA testing does not depict which states have disproportionately high or low insurance rates, the fact that California, Texas, and Colorado commonly appear in significant pairs for the step-down tests supports Zuckerman’s results.
+These results are significant in supporting Zuckerman’s article on how there are differences in insurance coverage across states; however, our exploratory data refutes the claim that California, Texas, and Colorado having disproportionately high uninsurance rates, instead indicating that Texas has teh highest uninsurance rates (Zuckerman 1999, 8). These variances for health insurance correspond with state based variances for doctors’ visits, heart disease prevalence, and people taking high blood pressure medications.
 
 A Bonferroni correction is implemented on the ANOVA testing because it is unlikely that the state distributions are independent from each other, but the research is limited in identifying what exactly causes a lack of independence. Identifying this cause could allow one to correct the lack of independence more accurately.
 
