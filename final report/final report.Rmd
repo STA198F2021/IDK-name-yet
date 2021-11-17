@@ -68,6 +68,18 @@ diabetes <- read_excel(here("data/diabetes.xlsx"))
 kidney_disease <- read_excel(here("data/kidney_disease.xlsx"))
 ```
 
+```{r upload-ANOVA-summary-data, echo= FALSE, message= FALSE, warning= FALSE}
+ANOVA_Summary_table <- read_excel(here("data/ANOVA Summary table.xlsx"))
+```
+
+```{r upload-regressions-data, echo= FALSE, message= FALSE, warning= FALSE}
+regressions <- read_excel(here("data/regressions.xlsx"))
+```
+
+```{r upload-regression-p-value-data, echo= FALSE, message= FALSE, warning= FALSE}
+regressionpvalues <- read_excel(here("data/regressionpvalues.xlsx"))
+```
+
 ```{r edit-insurance-data, echo= FALSE, message= FALSE, warning= FALSE}
 edit_insurance <- insurance %>%
   select(StateAbbr, StateDesc, CityName, Data_Value_Type, Data_Value, GeoLocation) %>%
@@ -376,6 +388,8 @@ ggarrange(map1, map2, map3, map4, nrow = 2, ncol = 2)
 
 ## Research Question 1
 
+We modeled our data with a linear regression to determine if there were significant correlations between healthcare access variables and mental health and physical health outcomes. We did not add any interactions to our linear models because all the explanatory variables are numerical, and the course does not encompass an analysis of interactions between two numerical variables. To determine whether a linear regression model would be appropriate, we made residual plots for each health outcome to check for any patterns in the residuals. For smoking, binge drinking, physical activity, and diabetes, there didn’t seem to be a significant pattern in the residual plot, so a linear regression model was appropriate. However, for coronary heart disease and kidney disease, there was a pattern in the residual plot where the higher the predicted percentage of adults with diabetes, the larger the magnitude of the residual, such that a linear regression model would not be appropriate.
+
 ## Research Question 2
 
 We conducted ANOVA testing to determine if there was variance within and between states for the healthcare access, behavior, and health outcome variables. We determined that state distributions of % lack of insurance, % visiting the doctor, log % with heart disease, and log % taking high BP medications had normal distributions within groups and homoscedastic variance and therefore fit the assumptions for ANOVA testing. It is highly unlikely that the samples groups within an ANOVA test are independent; for example, certain states may share similar political contexts and could be more likely to share simliar health outcomes. We employed a Bonferroni correction with a subsequent significance level of p = 0.000641025641. 
@@ -384,14 +398,20 @@ We conducted ANOVA testing to determine if there was variance within and between
 
 ## Research Question 1
 
-It is highly unlikely that the samples are independent; for example, the fact that a person who has insurance is more likely to visit the doctor and take medications demonstrates that these groups are not independent.
+1) Holding all other variables constant when evaluating each explanatory variable, we expect a 0.0523 percentage increase in adults smoking in a city for every percent increase in a city lacking access to health insurance, a 0.0966 percentage decrease in adults smoking in a city for each percent decrease of people in a city visiting doctor for routine checkup within the past year, and a 0.674 percentage increase in adults in a city smoking for each percent increase in adults in city with high blood pressure had access to high blood pressure medication. The coefficients for all three variables are statistically significant (p-value < 0.05), meaning there is less than a 5% chance such a coefficient or more extreme would be found in the data if percentage of adults smoking and the healthcare access variables were not associated. 
+
+2) Holding all other variables constant when evaluating each explanatory variable, we expect a 0.162 percentage decrease of adults in a city reporting binge drinking for every percent increase of adults in a city lacking access to health insurance, a 0.0565 percentage increase in adults in a city reporting binge drinking for each percentage increase of adults in a city visiting doctor for routine checkup within the past year, and a 0.137 percentage decrease in adults in a city reporting binge drinking for each percent increase in adults in a city with high blood pressure had access to high blood pressure medication. The coefficient for all three variables are statistically significant (p-value < 0.05).
+
+3) Holding all other variables constant when evaluating each explanatory variable, we expect a 0.533 percentage increase of adults in a city reporting no physical activity for each percent increase of adults in a city lacking health insurance, a 0.0625 percentage decrease in of adults in a city reporting no physical activity for each percent increase of adults in a visiting doctor for routine checkup within the past year, and a 0.738 percentage increase of adults in a city reporting no physical activity for each percent increase of adults in a city with high blood pressure had access to high blood pressure medication. The coefficient for all three variables are statistically significant (p-value < 0.05).
+
+4) Holding all other variables constant when evaluating each explanatory variable, we expect a 0.239 percentage increase in population diagnosed with diabetes for each percent increase of adults in a city lacking health insurance, a 0.065 percentage decrease in population diagnosed with diabetes for each percent increase of adults in a visiting doctor for routine checkup within the past year, and a 0.171 percentage increase in population diagnosed with diabetes for each percent increase of adults in a city with high blood pressure had access to high blood pressure medication. The coefficient for all three variables are statistically significant (p-value < 0.05). 
 
 ```{r linear-regression-access-smoking-int, include= FALSE}
-int_access_smoking_fit <- linear_reg() %>%
+access_smoking_fit <- linear_reg() %>%
   set_engine("lm") %>%
-  fit(smoking ~ insurance + visits_to_doctor + medicine_high_bp + (insurance * visits_to_doctor) + (insurance * medicine_high_bp) + (visits_to_doctor * medicine_high_bp), data = data_500_cities)
-int_access_smoking_fit_aug <- augment(int_access_smoking_fit$fit)
-tidy(int_access_smoking_fit) %>%
+  fit(smoking ~ insurance + visits_to_doctor + medicine_high_bp, data = data_500_cities)
+access_smoking_fit_aug <- augment(access_smoking_fit$fit)
+tidy(access_smoking_fit) %>%
   print()
 ```
 
@@ -399,7 +419,7 @@ tidy(int_access_smoking_fit) %>%
 smokingregressiongraph <- data_500_cities %>%
 ggplot(mapping = aes(x = insurance, y = smoking)) + 
 geom_point(size = 0.25) +
-geom_smooth(method = "lm", data = int_access_smoking_fit_aug, mapping = aes(x = insurance, y = .fitted)) +
+geom_smooth(method = "lm", data = access_smoking_fit_aug, mapping = aes(x = insurance, y = .fitted)) +
   labs(
     title = "vs. Percentage of Smoking Adults",
     subtitle = "Data from CDC 500 Cities",
@@ -409,11 +429,11 @@ geom_smooth(method = "lm", data = int_access_smoking_fit_aug, mapping = aes(x = 
 ```
 
 ```{r linear-regression-access-binge-drinking-int, include= FALSE}
-int_access_binge_drinking_fit <- linear_reg() %>%
+access_binge_drinking_fit <- linear_reg() %>%
   set_engine("lm") %>%
-  fit(binge_drinking ~ insurance + visits_to_doctor + medicine_high_bp + (insurance * visits_to_doctor) + (insurance * medicine_high_bp) + (visits_to_doctor * medicine_high_bp), data = data_500_cities)
-int_access_binge_drinking_fit_aug <- augment(int_access_binge_drinking_fit$fit)
-tidy(int_access_binge_drinking_fit) %>%
+  fit(binge_drinking ~ insurance + visits_to_doctor + medicine_high_bp, data = data_500_cities)
+access_binge_drinking_fit_aug <- augment(access_binge_drinking_fit$fit)
+tidy(access_binge_drinking_fit) %>%
   print()
 ```
 
@@ -421,7 +441,7 @@ tidy(int_access_binge_drinking_fit) %>%
 bingedrinkingregressiongraph <- data_500_cities %>%
 ggplot(mapping = aes(x = insurance, y = binge_drinking)) + 
 geom_point(size = 0.25) +
-geom_smooth(method = "lm", data = int_access_binge_drinking_fit_aug, mapping = aes(x = insurance, y = .fitted)) +
+geom_smooth(method = "lm", data = access_binge_drinking_fit_aug, mapping = aes(x = insurance, y = .fitted)) +
   labs(
     title = "vs. Reporting Binge Drinking",
     subtitle = "Data from CDC 500 Cities",
@@ -431,11 +451,11 @@ geom_smooth(method = "lm", data = int_access_binge_drinking_fit_aug, mapping = a
 ```
 
 ```{r linear-regression-access-physical-activity-all-int, include= FALSE}
-int_access_physical_activity_fit <- linear_reg() %>%
+access_physical_activity_fit <- linear_reg() %>%
   set_engine("lm") %>%
-  fit(physical_activity ~ insurance + visits_to_doctor + medicine_high_bp + (insurance * visits_to_doctor) + (insurance * medicine_high_bp) + (visits_to_doctor * medicine_high_bp), data = data_500_cities)
-int_access_physical_activity_fit_aug <- augment(int_access_physical_activity_fit$fit)
-tidy(int_access_physical_activity_fit) %>%
+  fit(physical_activity ~ insurance + visits_to_doctor + medicine_high_bp, data = data_500_cities)
+access_physical_activity_fit_aug <- augment(access_physical_activity_fit$fit)
+tidy(access_physical_activity_fit) %>%
   print()
 ```
 
@@ -443,7 +463,7 @@ tidy(int_access_physical_activity_fit) %>%
 physicalactivityregressiongraph <- data_500_cities %>%
 ggplot( mapping = aes(x = insurance, y = physical_activity)) + 
 geom_point(size = 0.25) +
-geom_smooth(method = "lm", data = int_access_physical_activity_fit_aug, mapping = aes(x = insurance, y = .fitted)) +
+geom_smooth(method = "lm", data = access_physical_activity_fit_aug, mapping = aes(x = insurance, y = .fitted)) +
   labs(
     title = "vs. No Physical Activity",
     subtitle = "Data from CDC 500 Cities",
@@ -453,19 +473,19 @@ y = "Percent of City Reporting No Physical Activity"
 ```
 
 ```{r linear-regression-access-diabetes-int, include= FALSE}
-int_access_diabetes_fit <- linear_reg() %>%
+access_diabetes_fit <- linear_reg() %>%
   set_engine("lm") %>%
-  fit(diabetes ~ insurance + visits_to_doctor + medicine_high_bp + (insurance * visits_to_doctor) + (insurance * medicine_high_bp) + (visits_to_doctor * medicine_high_bp), data = data_500_cities)
-int_access_diabetes_fit_aug <- augment(int_access_diabetes_fit$fit)
-tidy(int_access_diabetes_fit) %>%
+  fit(diabetes ~ insurance + visits_to_doctor + medicine_high_bp, data = data_500_cities)
+access_diabetes_fit_aug <- augment(access_diabetes_fit$fit)
+tidy(access_diabetes_fit) %>%
   print()
 ```
 
 ```{r graph-regression-access-diabetes-all-int, warning= FALSE, message= FALSE}
 diabetesregressiongraph <- data_500_cities %>%
-ggplot( mapping = aes(x = insurance, y = diabetes)) + 
+ggplot(mapping = aes(x = insurance, y = diabetes)) + 
 geom_point(size = 0.25) +
-geom_smooth(method = "lm", data = int_access_diabetes_fit_aug, mapping = aes(x = insurance, y = .fitted)) +
+geom_smooth(method = "lm", data = access_diabetes_fit_aug, mapping = aes(x = insurance, y = .fitted)) +
   labs(
     title = "vs. Adults with Diabetes",
     subtitle = "Data from CDC 500 Cities",
@@ -481,11 +501,28 @@ Linear Regression Considers Visits to Doctor and High BP Meds as Explanatory Var
 ggarrange(smokingregressiongraph, bingedrinkingregressiongraph, physicalactivityregressiongraph, diabetesregressiongraph, nrow = 2, ncol = 2)
 ```
 
+### Table 1: Intercepts and Coefficients for Linear Regressions
+```{r regressions-table, echo = FALSE, fig.height = 5}
+kable(head(regressions))
+```
+
+### Table 2: P-Values of Intercepts and Coefficients for Linear Regressions
+```{r regressionpvalues-table, echo = FALSE, fig.height = 5}
+kable(head(regressionpvalues))
+```
+
 ## Research Question 2
 
 ANOVA tests provided evidence that there is significant variances between and within states for % lack of insurance, % visiting the doctor, log % with heart disease, and log % taking high BP medications.  The step down tests demonstrated that there are 19 significant pairs for % lack of insurance, 47 significant pairs for % visiting doctor, 39 significant pairs for log % taking high BP meds, and 7 significant pairs for log % with heart disease. Florida and Texas had the most significant pairs (9 each) for the insurance step down tests, Colorado and Washington had the most significant pairs (10 each) for the visits to doctor step down tests, California, Colorado, Georgia, and Washington (9 each) had the most significant pairs for the log medicine high BP step down tests, and Colorado had the most significant pairs (3) for the log % heart disease step down tests. The only step-down test that had states with no significant pairs was for log % heart disease.
 
+### Table 3: ANOVA Summary Table Including F-Statistics and Significant Pairs
+```{r ANOVA-table, echo = FALSE, fig.height = 5}
+kable(head(ANOVA_Summary_table))
+```
+
 # Discussion
+
+## Research Question 1
 
 ## Research Question 2
 
@@ -504,7 +541,3 @@ https://chronicdata.cdc.gov/500-Cities-Places/500-Cities-Local-Data-for-Better-H
 https://www.urban.org/sites/default/files/publication/66251/309311-Snapshots-of-America-s-Families.PDF 
 
 https://www.annualreviews.org/doi/abs/10.1146/annurev.publhealth.28.021406.144042 
-
-# Appendix
-
-## Overall ANOVA Tests 
