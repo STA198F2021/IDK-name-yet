@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Impact of Health Insurance on Physical and Health Outcomes Across 500 States in America</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Maya Ghanem and Isabelle Xiong" />
+    <meta name="date" content="2021-11-18" />
+    <script src="libs/header-attrs-2.11/header-attrs.js"></script>
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Impact of Health Insurance on Physical and Health Outcomes Across 500 States in America
+### Maya Ghanem and Isabelle Xiong
+### Duke University
+### 2021-11-18
+
+---
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+---
+
+## Background Information and Significance
+
+
+- America, unlike other developed countries, does not have a universal healthcare program, meaning that not all individuals are granted free health insurance by the government. 
+- Levy and Meltzer (2008): access to health insurance impacts other health outcomes.
+-Zuckerman et al. (1999): health uninsurance rates vary across states, with California, Texas, and Colorado having diproportionately high uninsurance rates.
+
+---
+##500 Cities Dataset
+This dataset is provided by the Center for Disease Control and Prevention (CDC), Division of Population Health, Epidemiology and Surveillance Branch.
+
+Data from this dataset is sourced from 28,000 census tracts in the 2010 census population data, Behavioral Risk Factor Surveillance System (BRFSS) data (2017, 2016), and American Community Survey (ACS) 2013-2017, 2012-2016 estimates. All data was collected through the form of surveys.
+
+Variables of Interest:
+- Healthcare Access for Adults (18+): Percent of City Population 1) that Lacks Insurance 2) with visits to doctor for routine checkup within the past year 3) who have high blood pressure and are taking medicine for high blood pressure control.
+- Geographic Distribution by State
+- Behavior for Adults (18+): Percent of city population 1) currently smoking 2) currently reporting binge drinking habits 3) reporting No leisure-time physical activity
+4) Health Outcomes for Adults (18+): Percent of city population 1) with coronary heart disease 2) diagnosed with diabetes 3) with kidney disease
+
+---
+
+## Research Questions
+-  Do cities with a greater lack of healthcare access have poorer mental health and/or physical health outcomes? 
+
+- Does healthcare access, mental health, and/or physical health outcomes vary by state?
+
+For Research Question 1, Healthcare Access Variables are the explanatory variables, whereas Behavior and Health Outcomes are the response variables. 
+
+For Research Question 2, Geographic Distribution by State is the explanatory variable, and all health indicators are the response variables.
+---
+##Transformations to Data Set
+- The original dataset includes about 29,000 observations, with multiple measurements for each city based on the data source (census, BRFSS, ACS). We restricted our dataset to only include variables on percent of city
+with lack of insurance, visiting the doctor, taking high blood pressure medications, smoking, reporting binge drinking, not having physical activity, with heart disease, with diabetes, and with kidney disease. We took the mean of all the age-adjusted prevalence measurements within a city and filtered our dataset to these means. As a result, there was only one measurement per city. For ANOVA testing, we filtered our dataset to
+only include states with measurements for at least 10 cities and created logarithmic versions of all variables.
+---
+
+## Data Analysis
+#### Research Question 1 
+We modeled our data with a linear regression to determine if there were significant correlations between healthcare access variables and health behaviors and physical health outcomes. We did not add any interactions to our linear models.  To determine whether a linear regression model would be appropriate for the physical and behavioral health outcomes, we made residual plots for each to check for any patterns in the residuals. For smoking, binge drinking, physical activity, and diabetes, there didn’t seem to be a significant pattern in the residual plot, so a linear regression model was appropriate.
+
+#### Research Question 2
+
+We conducted ANOVA testing to look for variances of health access, behavior, and outcome variables between states. 
+
+State distributions of variables that met ANOVA assumptions: percent lack of insurance, percent visiting the doctor, log percent with heart disease, log percent taking high BP medications
+
+Bonferroni Correction: p = 0.000641025641
+
+---
+## Research Question 1 Exploratory Data Analysis
+#### Scatterplot: Lack of Insurance Vs Physical and Behavioural Outcomes
+
+&lt;img src="test_files/figure-html/ggarrange-scatterplots-1.png" width="70%" /&gt;
+
+---
+## Results: Linear Model (Access Variables vs Outcomes) + Scatterplot (Insurance vs Outcomes)
+
+&lt;img src="test_files/figure-html/ggarrange-regressions-1.png" width="70%" /&gt;
+---
+
+### Table 1: Intercepts and Coefficients for Linear Regressions (No Interactions)
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Coefficients &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Smoking &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Binge Drinking &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Physical Activity &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Diabetes &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Intercept &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -15.0000 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 24.2000 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -28.1000 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -7.570 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Insurance &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0523 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -0.1620 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.5330 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.239 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Visits to Doctor &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -0.0966 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0565 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0625 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.065 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; High BP Meds &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.6740 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -0.1370 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.7380 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.171 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+### Table 2: P-Values of Intercepts and Coefficients for Linear Regressions
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Significance Value &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Smoking &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Binge Drinking &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Physical Activity &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Diabetes &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Intercept P-Value &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0000000 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0000000 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0000000 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0000000 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Insurance P-Value &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0279000 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0000000 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0000000 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0000000 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Visits to Doctor P-Value &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0308000 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0945000 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0995000 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0021300 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; High BP Meds P-Value &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0000000 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0000439 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0000000 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0000000 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Adjusted R-Squared Value &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.5150724 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.2367489 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.8369087 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.6797326 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+### Conclusion For Research Question 1
+- The linear regression models demonstrate that there is generally a positive correlation between lack of health insurance/ healthcare access and negative behaviors and physical health outcomes.
+
+-  The only exception is that one linear regression suggested a negative correlation between lack of healthcare access and binge drinking. 
+
+- Coefficient for visits_to_doctor had p-values above 0.05.
+
+- The linear regression on the impact health access variables on physical activity had the highest adjusted R-squared value (around 0.8). The smoking and diabetes regressions also had fairly high adjusted R-squared values. The binge drinking regression had a low R-squared value of around 0.2.
+---
+## Research Question 2
+The maps below visualize the distribution healthcare access, behavior, and outcome variables by state. Only states that have at least ten observations are included, and only four variables that fit the assumptions for ANOVA testing.
+
+
+
+
+
+
+
+
+
+&lt;img src="test_files/figure-html/ggarrange-maps-1.png" width="70%" /&gt;
+
+---
+## Anova Results
+&lt;img src="img/Anova.png" width="100%" style="display: block; margin: auto;" /&gt;
+---
+## Conclusion for Research Question 2
+
+The ANOVA testing demonstrated that:
+- there is variance within and across states for lack of insurance, visits to doctor, heart disease, and taking High BP medication rates.
+- Based on their higher F-squared values and
+greater number of significant pairs, visits to doctor and High BP Medication rates seemed to have more variance than lack of insurance and heart disease.
+
+---
+## Limitations
+- In the Linear Regression Models without Interactions, the adjusted R-square values for Smoking, Diabetes and Physical activity are above 0.5, meaning that more than 50% of the variability in the outcome data can be explained by the linear model. The adjusted R-square
+value for Binge Drinking is 0.2367, suggesting that only around 24% of the variability in the outcome data can be explained by the linear model.
+- For question 1, it is highly unlikely that the explanatory variables are independent; for example, the fact that a person who has insurance is more likely to visit the doctor and take medications demonstrates that these groups are
+not independent. A way to remedy this would be to include interactions between correlated explanatory variables, but interpreting interactions between two numerical variables is beyond the scope of this course.
+- For question 2, a Bonferroni correction is implemented on the ANOVA testing because it is unlikely that the state distributions
+are independent from each other, but the research is limited in identifying what exactly causes a lack of
+independence. Identifying this cause could allow one to correct the lack of independence more accurately.
+---
+## Further Research
+
+- For question 1, further research could look into causes for the correlations between the variables in the linear regressions. In particular, it should investigate why there is a negative correlation between percent of city lacking health care access and percent of city binge drinking. A different type of regression model would likely be more appropriate and have higher adjusted R-square values closer to 1. 
+- Look into different types of regression models for the data, but this is beyond the scope of the course.
+- For question 2, Further research should investigate the socioeconomic and policy factors that contribute to differences between
+and within states. Are the differences due to differing statewide healthcare policies or the result of inherent
+economic inequality between states?
+
+---
+## References
+https://chronicdata.cdc.gov/500-Cities-Places/500-Cities-Local-Data-for-Better-Health-2019-relea/6vp6-
+wxuq
+https://www.urban.org/sites/default/files/publication/66251/309311-Snapshots- of -America- sFamilies.PDF
+https://www.annualreviews.org/doi/abs/10.1146/annurev.publhealth.28.021406.144042
+
+---
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
