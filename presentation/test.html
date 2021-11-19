@@ -132,7 +132,6 @@ Variables of Interest:
 - Does healthcare access, mental health, and/or physical health outcomes vary by state?
 
 For Research Question 1, Healthcare Access Variables are the explanatory variables, whereas Behavior and Health Outcomes are the response variables. 
-
 For Research Question 2, Geographic Distribution by State is the explanatory variable, and all health indicators are the response variables.
 ---
 ##Transformations to Data Set
@@ -209,7 +208,7 @@ Bonferroni Correction: p = 0.000641025641
 &lt;/table&gt;
 
 ---
-### Table 2: P-Values of Intercepts and Coefficients for Linear Regressions
+### Table 2: P-Values of Intercepts and Coefficients for Linear Regressions (No Interactions)
 &lt;table&gt;
  &lt;thead&gt;
   &lt;tr&gt;
@@ -263,10 +262,6 @@ Bonferroni Correction: p = 0.000641025641
 ### Conclusion For Research Question 1
 - The linear regression models demonstrate that there is generally a positive correlation between lack of health insurance/ healthcare access and negative behaviors and physical health outcomes.
 
--  The only exception is that one linear regression suggested a negative correlation between lack of healthcare access and binge drinking. 
-
-- Coefficient for visits_to_doctor had p-values above 0.05.
-
 - The linear regression on the impact health access variables on physical activity had the highest adjusted R-squared value (around 0.8). The smoking and diabetes regressions also had fairly high adjusted R-squared values. The binge drinking regression had a low R-squared value of around 0.2.
 ---
 ## Research Question 2
@@ -295,10 +290,9 @@ greater number of significant pairs, visits to doctor and High BP Medication rat
 
 ---
 ## Limitations
-- In the Linear Regression Models without Interactions, the adjusted R-square values for Smoking, Diabetes and Physical activity are above 0.5, meaning that more than 50% of the variability in the outcome data can be explained by the linear model. The adjusted R-square
-value for Binge Drinking is 0.2367, suggesting that only around 24% of the variability in the outcome data can be explained by the linear model.
-- For question 1, it is highly unlikely that the explanatory variables are independent; for example, the fact that a person who has insurance is more likely to visit the doctor and take medications demonstrates that these groups are
-not independent. A way to remedy this would be to include interactions between correlated explanatory variables, but interpreting interactions between two numerical variables is beyond the scope of this course.
+- In the Linear Regression Models without Interactions, some of the adjusted R-square values were not close to 1. 
+
+- For question 1, it is highly unlikely that the explanatory variables are independent; for example, the fact that a person who has insurance is more likely to visit the doctor and take medications demonstrates that these groups are not independent. A way to remedy this would be to include interactions between correlated explanatory variables, but interpreting interactions between two numerical variables is beyond the scope of this course.
 - For question 2, a Bonferroni correction is implemented on the ANOVA testing because it is unlikely that the state distributions
 are independent from each other, but the research is limited in identifying what exactly causes a lack of
 independence. Identifying this cause could allow one to correct the lack of independence more accurately.
