@@ -1,5 +1,5 @@
 ---
-title: "Impact of Health Insurance on Physical and Health Outcomes Across 500 States in America"
+title: "Impact of Health Access on Behavioral and Physical Health Outcomes Across 475 Cities in America"
 author: "Maya Ghanem and Isabelle Xiong"
 institute: "Duke University"
 date: "`r Sys.Date()`"
@@ -437,10 +437,10 @@ tidy(access_physical_activity_fit)
 
 - America, unlike other developed countries, does not have a universal healthcare program, meaning that not all individuals are granted free health insurance by the government. 
 - Levy and Meltzer (2008): access to health insurance impacts other health outcomes.
--Zuckerman et al. (1999): health uninsurance rates vary across states, with California, Texas, and Colorado having diproportionately high uninsurance rates.
+- Zuckerman et al. (1999): health uninsurance rates vary across states, with California, Texas, and Colorado having diproportionately high uninsurance rates.
 
 ---
-##500 Cities Dataset
+## 500 Cities Dataset
 This dataset is provided by the Center for Disease Control and Prevention (CDC), Division of Population Health, Epidemiology and Surveillance Branch.
 
 Data from this dataset is sourced from 28,000 census tracts in the 2010 census population data, Behavioral Risk Factor Surveillance System (BRFSS) data (2017, 2016), and American Community Survey (ACS) 2013-2017, 2012-2016 estimates. All data was collected through the form of surveys.
@@ -449,7 +449,7 @@ Variables of Interest:
 - Healthcare Access for Adults (18+): Percent of City Population 1) that Lacks Insurance 2) with visits to doctor for routine checkup within the past year 3) who have high blood pressure and are taking medicine for high blood pressure control.
 - Geographic Distribution by State
 - Behavior for Adults (18+): Percent of city population 1) currently smoking 2) currently reporting binge drinking habits 3) reporting No leisure-time physical activity
-4) Health Outcomes for Adults (18+): Percent of city population 1) with coronary heart disease 2) diagnosed with diabetes 3) with kidney disease
+- Health Outcomes for Adults (18+): Percent of city population 1) with coronary heart disease 2) diagnosed with diabetes 3) with kidney disease
 
 ---
 

@@ -1,0 +1,53 @@
+---
+title: "USCLAP Corrections"
+author: "Maya Ghanem"
+date: "12/21/2021"
+output: pdf_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE, echo= FALSE, warning= FALSE, message= FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning= FALSE, message= FALSE)
+```
+
+```{r load-data-packages, echo= FALSE, warning= FALSE, message= FALSE}
+library(readr)
+library(tidyverse)
+library(readxl)
+library(dplyr)
+library(tidymodels)
+library(patchwork)
+library(plotly)
+library(widgetframe)
+library(here)
+library(sf)
+library(rnaturalearth)
+library(rnaturalearthdata)
+library(rgeos)
+library(patchwork)
+library(ggpubr)
+library(palmerpenguins)
+library(knitr)
+library(xaringanthemer)
+```
+
+# Notes from Gradescope
+
+- In general, this is quite good. One challenge with modeling the % is that linear regression treats them as having equal variance, but the population sizes differ markedly, so the %'s should have different variances. Ideally you'd use a binomial model where n is the  population and x is the # with the endpoint. Also note Bonferroni doesn't address lack of independence (to handle that you can control for state in the model). It would be good to show some exploratory data analysis of the correlations among your predictor variables, as you hypothesize about them later in the report.
+- Overall this is good. Residuals show some departure from equal variances, and perhaps other approaches could be explored (e.g., logistic regression).  Would be good to go into more detail about how exclusion of states with <10 cities affects results -- the observations are cities, not states.  Maybe you could run both ways and see if results are consistent in a sensitivity analysis?
+
+So we need to rethink the regressions. For things that are a proportion of the population, we could have two responses (1 = has the outcome, 2 = does not have the outcome) and try to model the probability of getting something based on that. But can you make estimates of percentages into predictions for a binary variable? 
+
+This is a good answer I found after searching up regressions where the dependent variable is a percentage: https://ezinearticles.com/?Proportions-As-a-Dependent-Variable-in-Regression---Which-Type-of-Model?&id=2101689 
+
+If you have the total population, could you then create a binary variable for all the observations within that? I feel like that would be very complicated though... 
+
+There is something called the beta distribution that can be used to model continuous percentages, but it seems to be way beyond the scope of the course. I feel like if we did it we would not be able to fully understand it. Maybe the best thing to do would be to 
+
+a) focus on ANOVA or
+b) focus on one city and create 0,1 variables based on the overall percentage? That could definitely be something that would work...
+
+Maybe we could focus on one state, look at the differences between cities in that state with ANOVA, and then predict the probability of getting something based on a binary response for all the observations within the cities of that state...
+
+Make sure you understand: the asssumptions, what is the model used for, how to perform it, and how to interpret the results.
