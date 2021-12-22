@@ -48,6 +48,34 @@ There is something called the beta distribution that can be used to model contin
 a) focus on ANOVA or
 b) focus on one city and create 0,1 variables based on the overall percentage? That could definitely be something that would work...
 
-Maybe we could focus on one state, look at the differences between cities in that state with ANOVA, and then predict the probability of getting something based on a binary response for all the observations within the cities of that state...
+Maybe we could focus on one state, look at the differences between cities in that state with a chi squared test, and then predict the probability of getting something based on a binary response for all the observations within the cities of that state...
 
 Make sure you understand: the asssumptions, what is the model used for, how to perform it, and how to interpret the results.
+
+Here are things we can do:
+
+1) Start with a focus on ANOVA. See how far that takes you and what significance you can draw from it.
+
+2) For the linear regressions, create a two-limit Tobit model that sets 0 and 100 as the bounds of the model. That way you are accounting for the fact that it is not unlimited.
+
+Here is a link that talks about the tobit model: https://stats.oarc.ucla.edu/r/dae/tobit-models/  
+
+3) Select one state, create a binary variable based on the proportions of the cities. Conduct chi squared test and then do logistic regression. Use it to potentially have a commentary about wealth? Insurance? Other socioeconomic factors?
+
+I'm thinking that the original research report was too scattered. Maybe is best to ask: How does state residence affect your access to insurance? By just focusing on one variable, maybe that is a better thing to do...? Is there anything else that we should control for in this scenario? Maybe we should control for other socioeconomic and demographic numbers. Does CDC include this?
+
+Potential research questions:
+
+1) Is there any significant relationship between state residence and healthcare access? You would need to control for income level to determine if this is due to state policies, but you do not have data to do so.
+
+2) Is there any significant relationship between state residence and binge drinking? You could use healthcare access to control for income level/socioeconomic status and then work from there. First do ANOVA to see if there is anything significant, then create a tobit limited linear regression model controlling for health care access to see what the relationship is.
+ 
+0) Explain why this is significant and present research question. 
+1) Exploratory data: Maps for Binge Drinking. 
+2) ANOVA: check assumptions, conduct test, see results
+3) TOBIT linear regression: check assumptions, conduct test, see results
+4) Conclusions
+
+
+
+
